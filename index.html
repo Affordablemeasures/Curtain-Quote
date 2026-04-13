@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Affordable Curtains &amp; Blinds — Curtain Quoting Tool</title>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -238,7 +238,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .bay-size-type button{flex:1;padding:6px 10px;font-size:11px;font-weight:600;background:var(--chd);border:none;cursor:pointer;color:#888;transition:all .15s;letter-spacing:.03em}
 .bay-size-type button.active{background:var(--lm);color:var(--chd)}
 /* Staff selector modal */
-#staffModal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center}
+#staffModal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:none;align-items:center;justify-content:center}
 #staffModalBox{background:var(--chm);border:2px solid var(--lm);border-radius:var(--rl);padding:28px 32px;width:380px;max-width:95vw}
 #staffModalBox h3{margin:0 0 6px;font-size:18px;color:var(--lm);font-family:'Oswald',sans-serif;letter-spacing:.04em}
 #staffModalBox p{margin:0 0 18px;font-size:12px;color:#888}
@@ -252,6 +252,40 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .fab-cost-box input{background:#1a1200;font-size:15px;font-weight:700;color:#ffcc66;width:100%}
 .fab-cost-box .iu{background:var(--qq);color:#fff;font-weight:800}
 .fab-cost-box.filled{border-color:var(--lm)}
+/* ── HELP MODAL ── */
+#helpModal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9998;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 12px}
+#helpBox{background:var(--chm);border:2px solid var(--lm);border-radius:var(--rl);width:780px;max-width:98vw;margin:auto}
+#helpBox h1{font-family:'Oswald',sans-serif;font-size:20px;color:var(--lm);letter-spacing:.04em;margin:0}
+#helpBox h2{font-family:'Oswald',sans-serif;font-size:14px;color:var(--lm);letter-spacing:.05em;text-transform:uppercase;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid #333}
+#helpBox h3{font-family:'Oswald',sans-serif;font-size:12px;color:var(--lml);letter-spacing:.04em;text-transform:uppercase;margin:12px 0 5px}
+#helpBox p{font-size:12px;color:#bbb;line-height:1.7;margin:0 0 8px}
+#helpBox ul{margin:0 0 10px 18px;padding:0}
+#helpBox li{font-size:12px;color:#bbb;line-height:1.7;margin-bottom:3px}
+#helpBox li strong{color:#ddd}
+#helpBox .help-tip{background:#1a2800;border:1px solid var(--lmd);border-radius:5px;padding:8px 12px;margin:8px 0;font-size:11px;color:var(--lml)}
+#helpBox .help-warn{background:#2a1800;border:1px solid #664400;border-radius:5px;padding:8px 12px;margin:8px 0;font-size:11px;color:#ffcc88}
+#helpBox .help-section{padding:20px 24px;border-bottom:1px solid #2a2a2a}
+#helpBox .help-section:last-child{border-bottom:none}
+.help-tab{padding:8px 16px;border:none;background:transparent;cursor:pointer;font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#666;letter-spacing:.04em;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .15s}
+.help-tab.active{color:var(--lm);border-bottom-color:var(--lm)}
+.help-tab:hover{color:#ccc}
+.help-kbd{display:inline-block;background:var(--chd);border:1px solid #555;border-radius:3px;padding:1px 6px;font-size:10px;font-family:monospace;color:#ccc}
+/* ── FABRIC LIBRARY ── */
+.flib-ac{position:absolute;left:0;right:0;top:100%;background:var(--chd);border:1.5px solid var(--lm);border-top:none;border-radius:0 0 var(--r) var(--r);z-index:500;max-height:220px;overflow-y:auto;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.flib-ac-item{padding:7px 11px;cursor:pointer;border-bottom:1px solid #2a2a2a;transition:background .1s}
+.flib-ac-item:hover{background:var(--chm)}
+.flib-ac-item:last-child{border-bottom:none}
+.flib-ac-sup{font-size:10px;color:var(--lml);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.flib-ac-rng{font-size:12px;color:#eee;font-weight:600}
+.flib-ac-col{font-size:11px;color:#aaa}
+.flib-ac-price{font-size:11px;color:var(--lm);font-weight:700;float:right}
+.flib-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid #2a2a2a;font-size:11px}
+.flib-row:last-child{border-bottom:none}
+.flib-row:hover{background:var(--chl)}
+.flib-del{background:transparent;border:1px solid #555;color:#888;border-radius:3px;padding:2px 7px;cursor:pointer;font-size:10px;transition:all .1s;flex-shrink:0}
+.flib-del:hover{border-color:#cc4444;color:#ff6666}
+.flib-badge{display:inline-flex;align-items:center;gap:5px;background:#1a2800;border:1px solid var(--lmd);color:var(--lml);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:4px;cursor:pointer}
+.flib-badge:hover{border-color:var(--lm);color:var(--lm)}
 .fab-cost-box.filled label{color:var(--lml)}
 .fab-cost-box.filled .iw{border-color:var(--lm)}
 .fab-cost-box.filled input{color:var(--lm)}
@@ -276,12 +310,80 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .mt10{margin-top:10px}.mt14{margin-top:14px}
 
 /* ── RESPONSIVE ── */
-@media(max-width:720px){
-  .body{padding:12px 10px 88px}
+
+/* ── Tablet: 481–768px ── */
+@media(max-width:768px){
+  .body{padding:12px 10px 96px}
   .fg3,.fg4{grid-template-columns:1fr 1fr}
   .hmid{display:none}
-  .tis{gap:11px}
+  .tis{gap:10px}
   .ti .tv{font-size:14px}
+  /* Supplier row — collapse to simpler layout */
+  .supp-row,.supp-row-hdr{grid-template-columns:1fr 1fr 1fr;font-size:11px}
+}
+
+/* ── Mobile: ≤ 540px (phones + Z-Fold folded) ── */
+@media(max-width:540px){
+  /* Header — stack brand + actions */
+  .hdr{height:auto;padding:8px 12px;flex-wrap:wrap;gap:6px}
+  .brand{flex:1;min-width:0}
+  .bname{font-size:13px}
+  .bsub{display:none}
+  .hmid{display:none}
+  .hacts{flex-wrap:wrap;gap:5px;width:100%;justify-content:flex-end}
+  /* Mode toggle smaller */
+  .mode-toggle{order:-1}
+  .mode-btn{padding:5px 10px;font-size:10px}
+  /* Buttons smaller */
+  .bsm{padding:5px 9px;font-size:10px}
+  /* Body padding — more room at top for taller header */
+  .body{padding:10px 8px 100px}
+  /* Forms — single column on phone */
+  .fg,.fg2,.fg3,.fg4{grid-template-columns:1fr}
+  .fgrp.s2,.fgrp.s3{grid-column:span 1}
+  /* Inputs — larger tap targets */
+  input[type=text],input[type=number],input[type=email],input[type=tel],input[type=date],select{padding:10px 12px;font-size:14px;min-height:44px}
+  textarea{padding:10px 12px;font-size:14px}
+  label{font-size:11px}
+  /* Pills — larger tap targets */
+  .pill{padding:8px 14px;font-size:12px}
+  /* Computed fields */
+  .comp,.comp.price{font-size:14px;min-height:44px}
+  /* Totals bar — wrap to 2 rows */
+  .tbar{padding:8px 12px;flex-direction:column;gap:8px;align-items:stretch}
+  .tis{flex-wrap:wrap;gap:8px;justify-content:space-between}
+  .ti .tv{font-size:16px}
+  .ti .tl{font-size:10px}
+  /* Window card header — stack meta on small screens */
+  .wmeta{display:none}
+  /* Panels */
+  .pb{padding:12px}
+  .ph{padding:8px 12px}
+  .ph h2{font-size:12px}
+  /* Staff modal */
+  #staffModalBox{padding:20px 16px}
+  /* Bay modal */
+  #bayModalBox{padding:14px 12px}
+  /* Supplier rows — single col */
+  .supp-row,.supp-row-hdr{grid-template-columns:1fr 1fr;font-size:10px}
+  /* Section labels */
+  .sl{font-size:9px}
+  /* Copy menu — full width */
+  [id^=copyMenu]{min-width:240px;right:0}
+  /* Tab labels shorter */
+  #tabAName,#tabBName{width:60px;font-size:10px}
+}
+
+/* ── Z-Fold unfolded / small tablet: 541–680px ── */
+@media(min-width:541px) and (max-width:680px){
+  .hdr{height:auto;padding:8px 14px;flex-wrap:wrap;gap:6px}
+  .hmid{display:none}
+  .hacts{flex-wrap:wrap;gap:5px}
+  .body{padding:10px 10px 96px}
+  .fg3,.fg4{grid-template-columns:1fr 1fr}
+  input[type=text],input[type=number],input[type=email],input[type=tel],input[type=date],select{min-height:40px;font-size:13px}
+  .pill{padding:7px 12px;font-size:11px}
+  .tis{gap:8px}
 }
 @media print{
   @page{size:A4 landscape;margin:10mm 8mm}
@@ -321,30 +423,234 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <button class="bg bsm" onclick="loadQuote()">📂 Load</button>
     <button class="bg bsm" onclick="saveQuote()">💾 Save</button>
           <button class="bgd bsm" onclick="saveAndNew()" title="Save then start fresh quote">💾 New Quote</button>
-          <div style="position:relative;display:inline-block">
-            <div id="promoMenu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:var(--chd);border:1.5px solid var(--lmd);border-radius:8px;z-index:9999;min-width:280px;box-shadow:0 4px 16px rgba(0,0,0,.5)">
-              <div style="padding:7px 12px;font-size:9px;color:var(--lml);letter-spacing:.07em;text-transform:uppercase;border-bottom:1px solid #333">Apply promotion to quote</div>
-              <div class="copy-opt" onclick="applyPromo('10off_total')">
-                <div style="font-weight:600;color:var(--lm)">10% off total quote</div>
-                <div style="font-size:10px;color:#888;margin-top:2px">10% discount on fabric, make, track, install and all items</div>
-              </div>
-              <div class="copy-opt" onclick="applyPromo('10off_uninstalled')">
-                <div style="font-weight:600;color:var(--lml)">10% off uninstalled quote</div>
-                <div style="font-size:10px;color:#888;margin-top:2px">10% discount on all items except install</div>
-              </div>
-              <div class="copy-opt" onclick="applyPromo('free_install')">
-                <div style="font-weight:600;color:var(--lml)">Free install</div>
-                <div style="font-size:10px;color:#888;margin-top:2px">Install cost removed from all windows</div>
-              </div>
-              <div class="copy-opt" onclick="applyPromo('none')" style="border-top:1px solid #333">
-                <div style="font-weight:600;color:#888">✕ Remove promotion</div>
-                <div style="font-size:10px;color:#666;margin-top:2px">Restore original pricing</div>
-              </div>
-            </div>
-          </div>
+    <button class="bg bsm" onclick="showHelp()" title="Help &amp; instructions">❓ Help</button>
     <button class="bl bsm" onclick="window.print()">🖨 Print/PDF</button>
   </div>
 </header>
+
+<!-- ═══════════ HELP MODAL ═══════════ -->
+<div id="helpModal" onclick="if(event.target===this)closeHelp()">
+  <div id="helpBox">
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:2px solid var(--lm)">
+      <div>
+        <h1>📋 Quoting Tool — Help &amp; Instructions</h1>
+        <div style="font-size:11px;color:#666;margin-top:3px">Affordable Curtains &amp; Blinds · Internal use only</div>
+      </div>
+      <button onclick="closeHelp()" style="background:transparent;border:1px solid #555;color:#888;border-radius:4px;padding:5px 14px;cursor:pointer;font-size:12px">✕ Close</button>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;border-bottom:1px solid #333;padding:0 24px;overflow-x:auto">
+      <button class="help-tab active" onclick="helpTab(0,this)">Getting Started</button>
+      <button class="help-tab" onclick="helpTab(1,this)">Detailed Quote</button>
+      <button class="help-tab" onclick="helpTab(2,this)">Quick Quote</button>
+      <button class="help-tab" onclick="helpTab(3,this)">Install &amp; Pricing</button>
+      <button class="help-tab" onclick="helpTab(4,this)">Fabric Library</button>
+      <button class="help-tab" onclick="helpTab(5,this)">Bends &amp; Bay Windows</button>
+      <button class="help-tab" onclick="helpTab(6,this)">Saving &amp; Printing</button>
+    </div>
+
+    <!-- Tab 0: Getting Started -->
+    <div class="help-tab-content" id="helpTab0">
+      <div class="help-section">
+        <h2>Welcome to the Quoting Tool</h2>
+        <p>This tool generates curtain quotes for Affordable Curtains &amp; Blinds. It handles two modes — <strong>Detailed Quote</strong> for full pricing, and <strong>Quick Quote</strong> for fast ballpark estimates. Both modes use the same Norfolk price grid for make costs.</p>
+        <div class="help-tip">💡 All prices are <strong>retail inc. GST</strong> unless the breakdown shows "(ex-GST)" or "(wholesale)".</div>
+      </div>
+      <div class="help-section">
+        <h2>First Steps</h2>
+        <h3>1 — Select your name</h3>
+        <p>On launch the tool asks who is quoting. Select your name to set your initials — these are included in the quote number (e.g. <span class="help-kbd">CU-ST-13-04-2026-01</span>). You can change who is quoting at any time by clicking the initials badge in the top-left.</p>
+        <h3>2 — Fill in customer details</h3>
+        <p>Enter the customer's name, address, phone, and email. The <strong>Date of Measure</strong> and <strong>Quote Date</strong> are separate — fill in both. Click <strong>Generate Quote #</strong> to create a new quote number.</p>
+        <h3>3 — Choose your mode</h3>
+        <p>Use the toggle in the header to switch between <strong>📋 Detailed Quote</strong> and <strong>⚡ Quick Quote</strong>. Detailed is for full quoted jobs. Quick Quote is for initial estimates when you don't yet have all the fabric details.</p>
+        <div class="help-tip">💡 The <strong>Fuel / Global Surcharge</strong> field applies a percentage on top of the entire quote total. Leave at 0% if not applicable.</div>
+      </div>
+      <div class="help-section">
+        <h2>Quote Numbering</h2>
+        <p>Quote numbers are formatted as <span class="help-kbd">CU-[INITIALS]-[DD-MM-YYYY]-[NN]</span>. The counter resets daily per staff member, so each person can have their own sequence each day. Numbers are stored in the browser and persist across sessions.</p>
+      </div>
+    </div>
+
+    <!-- Tab 1: Detailed Quote -->
+    <div class="help-tab-content" id="helpTab1" style="display:none">
+      <div class="help-section">
+        <h2>Adding Windows</h2>
+        <p>Click <strong>+ Add Window</strong> to add a new window card. Each window is independent. You can have as many windows as needed — they all roll up into the grand total.</p>
+        <h3>Curtain Type</h3>
+        <p>Select the curtain type first — <strong>Pencil Pleat</strong>, <strong>Wave Fold</strong>, or <strong>Pinch/SPP Pleat</strong>. The form sections that appear depend on the type selected. Wave Fold uses a separate set of fields and fabric measurements.</p>
+        <h3>Track &amp; Bracket</h3>
+        <p>Select the track type and bracket from the dropdowns. The tool looks up the retail price from its built-in price lists. If a price list hasn't been loaded for a track type yet, it will say "No price list loaded — supply manually".</p>
+        <div class="help-tip">💡 When you select <strong>Wave Fold (Series 51)</strong>, the tool automatically applies wave fold defaults and adds <strong>Flick Sticks</strong> to the pricing. Adjust quantity and size as needed.</div>
+        <h3>Track Width</h3>
+        <p>You can either type the track width directly, or use the <strong>Opening + Past Left + Past Right</strong> fields to calculate it. Both methods update the same track width value.</p>
+        <h3>Measurements</h3>
+        <ul>
+          <li><strong>Track / Rod Width</strong> — the finished width of the track in mm.</li>
+          <li><strong>Required Drop</strong> — the measured drop in mm from the top of the track to the floor (or desired hem position).</li>
+          <li><strong>Drop Allowance</strong> — calculated automatically based on curtain type, heading tape size, and weighted base selection. Do not enter manually.</li>
+          <li><strong>Cut Drop</strong> — automatically calculated. This is what the workroom cuts to.</li>
+        </ul>
+        <div class="help-warn">⚠ For <strong>continuous fabric</strong>, you must confirm the roll width before the calculation runs. Tick the confirmation checkbox once you've verified the width with the supplier.</div>
+      </div>
+      <div class="help-section">
+        <h2>Fabric Details</h2>
+        <p>Enter the <strong>Supplier</strong>, <strong>Range</strong>, <strong>Colour</strong>, and <strong>Fabric Cost (ex-GST per metre)</strong>. The retail price is automatically calculated at 100% markup. Fabric category (Blockout Coated, Sheer, Uncoated, Triple Weave) affects the default lining behaviour.</p>
+        <h3>Fullness</h3>
+        <p>Select the fullness multiplier. Default is <strong>2.25×</strong> for most curtains. Sheers typically use 2.5×. You can set a custom multiplier if needed.</p>
+        <h3>Lining</h3>
+        <p>Tick <strong>Include loose lining</strong> to add a separate lining make cost and fabric cost. Enter the lining fabric cost per metre. The lining uses the same meterage as the face fabric.</p>
+        <h3>Make Cost</h3>
+        <p>Make cost is looked up automatically from the <strong>Norfolk price grid</strong> based on the track width and drop. The grid uses the wholesale price, which is then marked up at <strong>60%</strong> to get the retail make cost. No discount is applied.</p>
+      </div>
+      <div class="help-section">
+        <h2>Quote A / Quote B</h2>
+        <p>The tool supports two quote variants (A and B) for the same customer — useful when offering a fabric choice or a premium vs. budget option. Use the tabs above the window list to switch between quotes. Quote B is a copy of Quote A that you can then modify independently.</p>
+      </div>
+      <div class="help-section">
+        <h2>Promotions</h2>
+        <p>The <strong>Promotions</strong> dropdown in Global Pricing Controls lets you apply a discount to the entire quote:</p>
+        <ul>
+          <li><strong>10% off total</strong> — applies to everything including install.</li>
+          <li><strong>10% off uninstalled</strong> — applies to fabric, make, and track only.</li>
+          <li><strong>Free install</strong> — removes all install charges from the total.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tab 2: Quick Quote -->
+    <div class="help-tab-content" id="helpTab2" style="display:none">
+      <div class="help-section">
+        <h2>Quick Quote Mode</h2>
+        <p>Quick Quote is designed for fast ballpark estimates — when you're on the phone or at a measure and need a rough number quickly. It uses simplified assumptions and does not require fabric cost details.</p>
+        <h3>Global Settings</h3>
+        <ul>
+          <li><strong>Default Curtain Type</strong> — sets the type used for all windows unless overridden per window.</li>
+          <li><strong>Fabric Cost</strong> — a single assumed cost per metre used across all windows.</li>
+          <li><strong>Fullness</strong> — applies to all windows unless overridden.</li>
+          <li><strong>Include Install</strong> — toggle whether install is included in the estimate. Default is ON (timber fix, standard height).</li>
+          <li><strong>Install Type</strong> — sets the default install type for the estimate.</li>
+        </ul>
+        <div class="help-tip">💡 The Assumptions banner at the top of Quick Quote mode shows exactly what is being assumed for this estimate.</div>
+        <h3>Per-Window Overrides</h3>
+        <p>Each window card has an <strong>⚙ Override defaults</strong> section where you can change the track type, bracket, fullness, bend type, and install per window.</p>
+        <h3>Accuracy</h3>
+        <p>Quick Quote uses continuous 3m fabric for all calculations, assumes centre-open hang, 100mm returns, and 200mm drop allowance. It is an <strong>estimate only</strong> — always confirm with a Detailed Quote before ordering.</p>
+      </div>
+    </div>
+
+    <!-- Tab 3: Install & Pricing -->
+    <div class="help-tab-content" id="helpTab3" style="display:none">
+      <div class="help-section">
+        <h2>Install Rates</h2>
+        <p>Install is calculated per window based on the <strong>number of hanging drops</strong>, the <strong>drop height tier</strong>, the <strong>track fix</strong>, and the <strong>install type</strong>.</p>
+        <h3>Drop Height Tiers</h3>
+        <ul>
+          <li><strong>≤2700mm</strong> — standard rate, <strong>$25.00 per drop</strong></li>
+          <li><strong>2701mm – 4000mm</strong> — elevated rate, <strong>$50.00 per drop</strong></li>
+          <li><strong>&gt;4000mm</strong> — elevated rate ($50/drop) plus a <strong>scaffold surcharge</strong> field appears. Enter the agreed POA amount. Note: may require scaffold.</li>
+        </ul>
+        <h3>Install Types</h3>
+        <ul>
+          <li><strong>Timber fix, standard height</strong> — $40 track fix + hang rate per drop</li>
+          <li><strong>Plaster / brick / steel, standard height</strong> — $80 track fix + hang rate per drop</li>
+          <li><strong>High fit / 2-man</strong> — $80 track fix + $50 per drop (regardless of measured drop)</li>
+          <li><strong>Clear window — leave on site</strong> — $10 flat per window</li>
+          <li><strong>Clear window — dispose</strong> — $20 flat per window</li>
+        </ul>
+        <h3>Hanging Drops Calculation</h3>
+        <p>The number of hanging drops is calculated from the required fabric width (track width × fullness) ÷ 1500mm, then rounded up. For <strong>centre-open</strong> curtains the result is rounded to the next <strong>even number</strong>. For <strong>one-way draw</strong> it is rounded to the next <strong>whole number</strong>.</p>
+        <div class="help-tip">💡 You can <strong>override the install cost</strong> manually on any window. Type the override amount and it replaces the calculated value. Click ✕ Clear to revert to calculated.</div>
+      </div>
+      <div class="help-section">
+        <h2>Markup Summary</h2>
+        <ul>
+          <li><strong>Fabric</strong> — 100% markup on cost price (cost × 2 = retail)</li>
+          <li><strong>Make cost</strong> — 60% markup on Norfolk wholesale (wholesale × 1.6 = retail)</li>
+          <li><strong>Track</strong> — 100% markup on wholesale price (wholesale × 2 = retail)</li>
+          <li><strong>Bends</strong> — 100% markup on $27.50 wholesale per bend</li>
+          <li>All prices rounded up to the nearest $5.00</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tab 4: Fabric Library -->
+    <div class="help-tab-content" id="helpTab4" style="display:none">
+      <div class="help-section">
+        <h2>Fabric Library</h2>
+        <p>The Fabric Library builds up automatically as you quote. Every time you enter a fabric with a supplier, range, and cost, it is saved to the library for future use.</p>
+        <h3>Auto-complete</h3>
+        <p>As you type in the <strong>Supplier</strong>, <strong>Range</strong>, or <strong>Colour</strong> fields, matching fabrics from the library appear in a dropdown. Click a result to instantly fill in all fabric fields — supplier, range, colour, cost, category, and width type.</p>
+        <h3>Auto-save</h3>
+        <p>Fabrics are saved automatically when a cost is entered and the supplier + range fields are filled. If you quote the same fabric at a different price, the stored price updates automatically.</p>
+        <h3>Managing the library</h3>
+        <p>Open the <strong>📚 Fabric Library</strong> panel at the bottom of the page to browse, search, or delete saved fabrics. Each entry shows how many times it has been used. Click ✕ on any row to remove it from the library.</p>
+        <div class="help-tip">💡 The library is stored in your browser's local storage and persists across sessions. It is specific to the computer and browser you are using — it does not sync between machines.</div>
+        <div class="help-warn">⚠ Clearing your browser's site data or using a different browser will clear the fabric library. Export/backup coming in a future version.</div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Bends & Bay Windows -->
+    <div class="help-tab-content" id="helpTab5" style="display:none">
+      <div class="help-section">
+        <h2>Corner &amp; Bay Window Bends</h2>
+        <p>Select the window shape from the <strong>Window Shape</strong> dropdown in the Bends section. A diagram modal opens automatically for bay, corner, and box bay windows.</p>
+        <h3>Corner Window — 1 Bend</h3>
+        <p>Choose <strong>Diagram A</strong> or <strong>Diagram B</strong> to set the corner orientation:</p>
+        <ul>
+          <li><strong>Diagram A</strong> — left section runs down the wall, right section runs along the top</li>
+          <li><strong>Diagram B</strong> — right section runs down the wall, left section runs along the top</li>
+        </ul>
+        <p>Enter the width of each section. The diagram shows Left section and Right section labels.</p>
+        <h3>Bay Window — 2 Bends (Angled)</h3>
+        <p>Enter the width of the left wing, centre, and right wing sections separately. The total is used as the track width for pricing.</p>
+        <h3>Box Bay — 2 Bends (Square/90°)</h3>
+        <p>Same as bay window but the wings are at 90° to the centre. Enter each section width.</p>
+        <h3>Custom Bends</h3>
+        <p>For unusual window shapes, select <strong>Custom</strong>. Enter the <strong>number of bends</strong> and the <strong>total combined track width</strong>. Attach a diagram sketch to the job file — the factory works from the diagram for unusual shapes. The quote is priced on the bends and total width entered.</p>
+        <h3>Bend Size Type</h3>
+        <p>In the diagram modal, select how your measurements are supplied to the factory:</p>
+        <ul>
+          <li><strong>Actual bend sizes</strong> — the sizes you enter are the exact finished dimensions the factory bends to.</li>
+          <li><strong>Allow for bracket projection</strong> — your sizes are the measured dimensions; the factory adjusts for bracket projection. Choose <strong>Forward</strong> (factory adds projection forward of your sizes) or <strong>Backward</strong> (factory deducts from your sizes). The quote price is always based on your entered sizes — this is a note to the factory only.</li>
+        </ul>
+        <div class="help-tip">💡 Bend pricing uses the Series 51 SAN price list at $27.50 wholesale per bend. Cord-drawn Wave Fold tracks cannot be bent.</div>
+      </div>
+    </div>
+
+    <!-- Tab 6: Saving & Printing -->
+    <div class="help-tab-content" id="helpTab6" style="display:none">
+      <div class="help-section">
+        <h2>Saving a Quote</h2>
+        <p>Click <strong>💾 Save</strong> in the header to download the quote as a <span class="help-kbd">.json</span> file. The filename includes the quote number and customer name (e.g. <span class="help-kbd">CU-ST-13-04-2026-01_Smith_Jane.json</span>).</p>
+        <p>To save to Google Drive: after downloading, open Google Drive in your browser and drag the file into your Curtain Quotes folder.</p>
+        <h3>Loading a Quote</h3>
+        <p>Click <strong>📂 Load</strong> to reload a previously saved <span class="help-kbd">.json</span> file. This restores customer details and settings. Window data from saved quotes is planned for a future version.</p>
+        <h3>New Quote</h3>
+        <p>Click <strong>💾 New Quote</strong> to save the current quote and start a fresh blank quote. The tool will ask you to confirm before clearing.</p>
+      </div>
+      <div class="help-section">
+        <h2>Printing &amp; PDF</h2>
+        <p>Click <strong>🖨 Print/PDF</strong> to open the browser print dialog. The tool includes a print-optimised stylesheet — headers, totals bars, and dark backgrounds are automatically adjusted for paper.</p>
+        <p>To save as a PDF: in the print dialog, change the destination to <strong>Save as PDF</strong>. Set paper size to <strong>A4</strong> and orientation to <strong>Landscape</strong> for the job sheet summary.</p>
+        <div class="help-tip">💡 The <strong>Job Sheet</strong> at the bottom of the Detailed Quote is designed for A4 landscape — it includes all window details in a compact table suitable for workroom handover.</div>
+      </div>
+      <div class="help-section">
+        <h2>Staff List</h2>
+        <p>The staff list is managed via the <strong>⚙ Edit staff list</strong> button in the Who is quoting? modal. Format each entry on its own line as:</p>
+        <p><span class="help-kbd">Full Name, XX</span> — where XX is 2–4 letters for initials.</p>
+        <p>Example: <span class="help-kbd">Jane Smith, JS</span></p>
+        <p>Changes save immediately and take effect on the next quote number generation.</p>
+      </div>
+    </div>
+
+    <div style="padding:12px 24px;background:var(--chd);border-top:1px solid #333;font-size:10px;color:#555;text-align:right;border-radius:0 0 var(--rl) var(--rl)">
+      Affordable Curtains &amp; Blinds Quoting Tool · Internal use only · For support contact your system administrator
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════ BODY ═══════════ -->
 <div class="body">
@@ -368,13 +674,18 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <div id="baySizeNote" style="font-size:10px;color:#888;font-style:italic;margin-top:5px">Sizes entered are the actual finished bend dimensions — supplier bends to these exact measurements</div>
         <!-- Bracket projection input — shown when 'projection' selected -->
         <div id="bayProjGrp" style="display:none;margin-top:8px">
-          <label style="font-size:10px;color:var(--qq);font-weight:700;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">Bracket projection to add at each bend point</label>
-          <div style="display:flex;align-items:center;gap:8px">
+          <label style="font-size:10px;color:var(--qq);font-weight:700;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px">Bracket projection at each bend point</label>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
             <input type="number" id="bayProjVal" value="80" min="0" max="300" step="5"
               style="width:80px;background:var(--chd);border:2px solid var(--qq);border-radius:6px;padding:6px 8px;font-size:15px;font-weight:700;color:var(--qq);font-family:Oswald,sans-serif;text-align:center">
             <span style="font-size:12px;color:#888">mm per bend point</span>
           </div>
-          <div style="font-size:10px;color:#aa7700;margin-top:4px;font-style:italic">Supplier will add this to each side of each bend when cutting the track</div>
+          <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:5px">Projection direction</div>
+          <div class="bay-size-type" id="bayProjDir">
+            <button class="active" onclick="setBayProjDir('forward',this)">Forward of sizes supplied</button>
+            <button onclick="setBayProjDir('backward',this)">Backward from sizes supplied</button>
+          </div>
+          <div id="bayProjDirNote" style="font-size:10px;color:#aa7700;margin-top:5px;font-style:italic">Factory will add bracket projection forward of the sizes you have entered</div>
         </div>
       </div>
 
@@ -454,7 +765,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <div class="fgrp" id="promoIndicator" style="display:none"><div style="font-size:11px;color:var(--lm);font-weight:600;padding:4px 8px;background:#1a2800;border:1px solid var(--lmd);border-radius:4px" id="promoIndicatorText"></div></div>
         <div class="fgrp fbc g8 mt10"><button class="bl" onclick="recalc()">↻ Recalculate</button></div>
         <div class="fgrp fbc g8 mt10"><button id="addWinBtn" class="bgd" onclick="addWin()">+ Add Window</button></div>
-        <div class="fgrp mt10" style="grid-column:span 2">
+        <div class="fgrp mt10" style="grid-column:span 2" id="gcPromoGrp">
           <label>Promotions</label>
           <div style="position:relative">
             <button id="promoBtn" onclick="togPromoMenu()"
@@ -483,18 +794,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
             </div>
           </div>
         </div>
-        <div class="fgrp mt10">
-          <label>Norfolk Make Cost Discount</label>
-          <div style="display:flex;align-items:center;gap:10px;background:#1a2a00;border:1.5px solid var(--lmd);border-radius:var(--r);padding:8px 12px;cursor:pointer" onclick="togDiscount()" id="discountToggle">
-            <div style="width:36px;height:20px;border-radius:10px;background:#444;position:relative;transition:background .2s;flex-shrink:0" id="discountTrack">
-              <div style="width:16px;height:16px;border-radius:50%;background:white;position:absolute;top:2px;left:2px;transition:left .2s" id="discountThumb"></div>
-            </div>
-            <span style="font-size:11px;color:#aaa" id="discountLabel">20% early payment discount: <strong style="color:#888">OFF</strong></span>
-          </div>
-        </div>
       </div>
       <!-- Itemise install separately toggle -->
-      <div class="fg4" style="margin-top:0;padding:10px 16px;border-top:1px solid #333">
+      <div class="fg4" style="margin-top:0;padding:10px 16px;border-top:1px solid #333" id="gcItemiseInstallGrp">
         <div class="fgrp" style="grid-column:span 2">
           <label>Install in totals</label>
           <div style="display:flex;align-items:center;gap:10px;background:var(--chd);border:1.5px solid #444;border-radius:var(--r);padding:8px 12px;cursor:pointer" onclick="togItemiseInstall()">
@@ -593,7 +895,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <div class="fg">
           <div class="fgrp">
             <label class="qq">Default Curtain Type</label>
-            <select id="qqCType" onchange="updAssume()">
+            <select id="qqCType" onchange="updAssume();qqWins.forEach(w=>calcQQW(w.id))">
               <option value="pp_block">Pencil Pleat — Blockout</option>
               <option value="pp_sheer">Pencil Pleat — Sheer</option>
               <option value="wave_sheer">Wave Fold — Sheer</option>
@@ -617,6 +919,23 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
           <div class="fgrp" id="qqFullCustGrp" style="display:none">
             <label class="qq">Custom Fullness</label>
             <div class="iw qq"><input type="number" id="qqFullCust" value="2.5" step=".05" min="1" max="4" oninput="recalcQQ()"><span class="iu">×</span></div>
+          </div>
+          <div class="fgrp">
+            <label class="qq">Include Install in Quote</label>
+            <div style="display:flex;align-items:center;gap:10px;background:#1a1000;border:1.5px solid #664400;border-radius:var(--r);padding:8px 12px;cursor:pointer" onclick="togQQInstall()" id="qqInstallToggle">
+              <div style="width:36px;height:20px;border-radius:10px;background:var(--qq);position:relative;transition:background .2s;flex-shrink:0" id="qqInstallTrack">
+                <div style="width:16px;height:16px;border-radius:50%;background:white;position:absolute;top:2px;left:18px;transition:left .2s" id="qqInstallThumb"></div>
+              </div>
+              <span style="font-size:11px;color:#ffcc88" id="qqInstallLabel">Install: <strong style="color:var(--qq)">ON — timber fix, standard height</strong></span>
+            </div>
+          </div>
+          <div class="fgrp" id="qqInstallTypeGrp">
+            <label class="qq">Install Type (global default)</label>
+            <select id="qqInstallType" onchange="updAssume();recalcQQ()" style="border-color:#664400">
+              <option value="timber" selected>Timber fix — standard height</option>
+              <option value="plaster">Plaster/brick/steel — standard height</option>
+              <option value="high">High fit / 2-man</option>
+            </select>
           </div>
         </div>
       </div>
@@ -645,6 +964,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
             <th style="border-bottom-color:var(--qq);color:var(--qq)">W × D</th>
             <th style="border-bottom-color:var(--qq);color:var(--qq);text-align:right">Fabric</th>
             <th style="border-bottom-color:var(--qq);color:var(--qq);text-align:right">Make</th>
+            <th style="border-bottom-color:var(--qq);color:var(--qq);text-align:right">Track</th>
+            <th style="border-bottom-color:var(--qq);color:var(--qq);text-align:right">Install</th>
             <th style="border-bottom-color:var(--qq);color:var(--qq);text-align:right">Est. Total</th>
           </tr></thead>
           <tbody id="qqSumBody"></tbody>
@@ -742,6 +1063,24 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="pb"><textarea id="qNotes" rows="4" placeholder="Additional notes for this quote..." style="resize:vertical;width:100%"></textarea></div>
   </div>
 
+  <!-- Fabric Library panel -->
+  <div class="panel" id="flibPanel">
+    <div class="ph" style="cursor:pointer" onclick="togFlibPanel()">
+      <div class="fbc g8"><div class="dot"></div><h2>📚 Fabric Library</h2><span style="font-size:10px;color:#888;font-weight:400;text-transform:none;letter-spacing:0" id="flibCount"></span></div>
+      <span style="color:#888;font-size:11px" id="flibArrow">▼ show</span>
+    </div>
+    <div id="flibBody" style="display:none">
+      <div class="pb" style="padding-bottom:6px">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+          <input type="text" id="flibSearch" placeholder="Search supplier, range or colour…" oninput="renderFlibTable()" style="flex:1;padding:7px 10px;border:1.5px solid #555;border-radius:var(--r);background:var(--ibg);font-size:12px;color:var(--tx)">
+          <button class="bd2 bsm" onclick="clearFlibConfirm()" style="white-space:nowrap">🗑 Clear all</button>
+        </div>
+        <div id="flibTable" style="background:var(--chd);border:1px solid #333;border-radius:var(--r);overflow:hidden;max-height:320px;overflow-y:auto"></div>
+        <div style="font-size:9px;color:#555;margin-top:6px;font-style:italic">Fabrics are saved automatically when you enter a cost and move on. Click any row to load it into the active window.</div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /body -->
 
 <!-- ═══════════ TOTALS BAR ═══════════ -->
@@ -773,7 +1112,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 // NORFOLK MAKE COST GRIDS
 // Source: Norfolk wholesale price list 2025. Prices ex-GST.
 // Markup: 60% (×1.6) to get retail inc. GST. Round up to next $5.
-// 20% early payment discount applied to wholesale BEFORE markup if togDiscount is ON.
+// Norfolk make costs are looked up directly from the price grid wholesale price — no discount applied.
 // Two grid types per curtain style: DROPS (narrow/wide width) and CONTINUOUS.
 // Always round UP to next size for both width and drop unless exact match.
 // ══════════════════════════════════════════
@@ -909,28 +1248,25 @@ function nkLookup(grid, widthMm, dropMm) {
 // Main make cost function
 // type: 'wp' (wave/pencil pleat), 'pp' (pinch/reverse/box pleat)
 // fabType: 'continuous' or 'drops' (narrow/wide width)
-// Returns retail price inc. GST (wholesale × discount × 1.6, rounded ↑ $5)
+// Returns wholesale price from Norfolk grid — caller applies 1.6 markup
 function getMakeCost(type, fabType, widthMm, dropMm) {
-  const isDiscount = window._earlyPayDiscount || false;
-  const discountFactor = isDiscount ? 0.8 : 1.0; // 20% off wholesale
   const grid = fabType === 'continuous'
     ? (type === 'pp' ? NK_PP_CONT : NK_WP_CONT)
     : (type === 'pp' ? NK_PP_DROPS : NK_WP_DROPS);
   const wholesale = nkLookup(grid, widthMm, dropMm);
-  return wholesale * discountFactor; // return wholesale (discounted if applicable) — caller applies 1.6 markup
+  return wholesale; // full Norfolk grid price — no discount applied
 }
 
 // Lining make cost (loose lining)
 function getLiningMakeCost(fabType, widthMm, dropMm) {
-  const isDiscount = window._earlyPayDiscount || false;
-  const discountFactor = isDiscount ? 0.8 : 1.0;
   const grid = fabType === 'continuous' ? NK_LIN_CONT : NK_LIN_DROPS;
   const wholesale = nkLookup(grid, widthMm, dropMm);
-  return wholesale * discountFactor;
+  return wholesale; // full Norfolk grid price — no discount applied
 }
 
 // Global discount state
-window._earlyPayDiscount = true; // default ON — toggled in DOMContentLoaded
+window._earlyPayDiscount = false; // discount never applied — Norfolk grid prices used as-is
+window._qqIncludeInstall = true;  // QQ: include install in total by default
 window._itemiseInstall = false;  // default OFF — install included in totals
 window._activePromo = null;       // active promotion: null | '10off_total' | '10off_uninstalled' | 'free_install'
 function togPromoMenu(){
@@ -1014,18 +1350,23 @@ function togItemiseInstall(){
   recalc();
 }
 
-function togDiscount() {
-  window._earlyPayDiscount = !window._earlyPayDiscount;
-  const on = window._earlyPayDiscount;
-  const track = document.getElementById('discountTrack');
-  const thumb = document.getElementById('discountThumb');
-  const label = document.getElementById('discountLabel');
-  if (track) track.style.background = on ? 'var(--lm)' : '#444';
-  if (thumb) thumb.style.left = on ? '18px' : '2px';
-  if (label) label.innerHTML = '20% early payment discount: <strong style="color:' + (on ? 'var(--lm)' : '#888') + '">' + (on ? 'ON — Norfolk invoices paid within 30 days' : 'OFF') + '</strong>';
-  recalc();
-  // Recalc all open windows
-  wins.forEach(w => { if(w.type==='pp') calcW(w.id); if(w.type==='wave') calcWaveW(w.id); });
+// togDiscount removed — Norfolk grid prices are always used as-is (no discount applied)
+
+function togQQInstall(){
+  window._qqIncludeInstall = !window._qqIncludeInstall;
+  const on = window._qqIncludeInstall;
+  const track = $('qqInstallTrack');
+  const thumb = $('qqInstallThumb');
+  const label = $('qqInstallLabel');
+  const typeGrp = $('qqInstallTypeGrp');
+  if(track) track.style.background = on ? 'var(--qq)' : '#444';
+  if(thumb) thumb.style.left = on ? '18px' : '2px';
+  if(label) label.innerHTML = on
+    ? 'Install: <strong style="color:var(--qq)">ON — included in totals</strong>'
+    : 'Install: <strong style="color:#888">OFF — supply only</strong>';
+  if(typeGrp) typeGrp.style.display = on ? '' : 'none';
+  updAssume();
+  // Recalc all QQ windows
   qqWins.forEach(w => calcQQW(w.id));
 }
 
@@ -1392,6 +1733,10 @@ function setMode(m){
   $('addWinBtn').onclick=m==='quick'?addQQWin:addWin;
   $('tbarAddBtn').textContent=m==='quick'?'+ Window':'+ Window';
   $('tbarAddBtn').onclick=m==='quick'?addQQWin:addWin;
+  // Hide detail-only controls in Global Pricing panel when in Quick mode
+  const isQQ = m==='quick';
+  if($('gcPromoGrp'))        $('gcPromoGrp').style.display        = isQQ ? 'none' : '';
+  if($('gcItemiseInstallGrp')) $('gcItemiseInstallGrp').style.display = isQQ ? 'none' : '';
   // Update dot colours
   ['custDot','gcDot','notesDot'].forEach(id=>{
     $(id).className='dot'+(m==='quick'?' qq':'');
@@ -1410,6 +1755,10 @@ function updAssume(){
   const ct=gv('qqCType');
   const def=QQ_DEFAULTS[ct]||QQ_DEFAULTS.pp_block;
   const fl=getQQFullness();
+  const installOn = window._qqIncludeInstall;
+  const installType = gv('qqInstallType')||'timber';
+  const installLabels = {timber:'Timber fix, std height', plaster:'Plaster/brick/steel, std height', high:'High fit / 2-man'};
+  const installNote = installOn ? (installLabels[installType]||installType) : 'Not included';
   const items=[
     {k:'Curtain type',v:def.label},
     {k:'Track',v:def.track},
@@ -1419,16 +1768,16 @@ function updAssume(){
     {k:'Drop allowance',v:def.dropAllow+'mm'},
     {k:'Returns',v:def.returns+'mm each side'},
     {k:'Brackets',v:'80mm projection'},
+    {k:'Install',v:installNote},
   ];
   $('assumeDisplay').innerHTML=items.map(i=>
     `<div class="assume-item"><span class="ak">${i.k}:</span><span class="av">${i.v}</span></div>`
   ).join('');
-  // Update footer note to reflect selected curtain type
   const qqFootNote=$('qqFootNote');
   if(qqFootNote){
     qqFootNote.textContent='⚡ Quick quote estimate only. Based on assumed fabric cost, '
       +fl+'× fullness, continuous 3m fabric, '+def.track+' track, 40mm brackets, '
-      +def.returns+'mm returns. Confirm all details before ordering.';
+      +def.returns+'mm returns, install: '+installNote+'. Confirm all details before ordering.';
   }
 }
 
@@ -1562,6 +1911,16 @@ function buildQQCard(id,num){
           <label class="qq">Bend Surcharge</label>
           <div class="iw qq"><input type="number" id="qqbprice${id}" value="45" step="5" oninput="calcQQW('${id}')"><span class="iu">$</span></div>
         </div>
+        <div class="fgrp s2">
+          <label class="qq">Install Override for This Window</label>
+          <select id="qqinstall${id}" onchange="calcQQW('${id}')" style="border-color:#664400">
+            <option value="">Use global setting</option>
+            <option value="include_timber">Include — timber fix, standard height</option>
+            <option value="include_plaster">Include — plaster/brick/steel, standard height</option>
+            <option value="include_high">Include — high fit / 2-man</option>
+            <option value="exclude">Exclude install (supply only)</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -1604,6 +1963,58 @@ function onQQTT(id){
 
 function onQQBkt(id){
   calcQQW(id);
+}
+
+// ── QQ Install cost helper ──
+// Returns install cost for a QQ window based on global toggle and per-window override
+// QQ always assumes centre-open (even drops), standard height unless overridden
+function calcQQInstallCost(id, tw, dr) {
+  // Determine if install is included for this window
+  const perWindow = gv('qqinstall'+id); // '' | 'include_timber' | 'include_plaster' | 'include_high' | 'exclude'
+  let includeInstall, installTypeKey;
+
+  if(perWindow === 'exclude') {
+    return { cost: 0, label: 'Excluded (window override)' };
+  } else if(perWindow && perWindow.startsWith('include_')) {
+    includeInstall = true;
+    installTypeKey = perWindow.replace('include_', '');
+  } else {
+    // Use global setting
+    includeInstall = window._qqIncludeInstall;
+    installTypeKey = gv('qqInstallType') || 'timber';
+  }
+
+  if(!includeInstall) return { cost: 0, label: 'Not included' };
+
+  const rates = INSTALL_RATES[installTypeKey] || INSTALL_RATES.timber;
+
+  // QQ assumes centre-open: drops = round up to next even number
+  const fl = getQQFullness();
+  const reqFabWidth = tw * fl;
+  const rawDrops = reqFabWidth / 1500;
+  const numDrops = Math.ceil(rawDrops / 2) * 2;
+
+  // 3-tier hang rate: ≤2700 = $25, 2701-4000 = $50, >4000 = $50 (scaffold POA — QQ uses $50 base)
+  const isForceHigh = (installTypeKey === 'high');
+  const isMidOrHigh = (dr > 2700) || isForceHigh;
+  const isWideTW    = (tw > 4000);
+  const hangRate    = (isMidOrHigh || isWideTW) ? rates.hangMid : rates.hangStd;
+  const isScaffold  = (dr > 4000) && !isForceHigh;
+
+  const trackFix  = rates.trackFix;
+  const hangCost  = numDrops * hangRate;
+  const cost      = r5(trackFix + hangCost);
+
+  const typeLabels = { timber:'Timber fix', plaster:'Plaster/brick/steel', high:'High fit' };
+  let rateNote = '';
+  if(isForceHigh)    rateNote = ' (high fit)';
+  else if(isScaffold) rateNote = ' (drop >4000mm — scaffold POA)';
+  else if(dr > 2700) rateNote = ' (drop >2700mm)';
+  else if(isWideTW)  rateNote = ' (wide track)';
+  const label = (typeLabels[installTypeKey]||installTypeKey)+', '+numDrops+' drops × $'+hangRate+rateNote+' + $'+trackFix+' track fix'
+    + (isScaffold ? ' + scaffold surcharge POA' : '');
+
+  return { cost, label, numDrops, hangRate, trackFix };
 }
 
 // ══════════════════════════════════════════
@@ -1655,21 +2066,26 @@ function calcQQW(id){
   const qqMkType = ct==='pinch_block' ? 'pp' : 'wp';
   const qqMkWholesale = getMakeCost(qqMkType, 'continuous', tw, dr);
   const mkR5 = r5(qqMkWholesale * 1.6);
-  const discNote = window._earlyPayDiscount ? '*' : '';
   // Track price — look up from price lists using QQ defaults
   const qqTrackWholesale = getTrackPrice(def.trackV||'s79', def.bktV||'s79_40', tw);
   const qqTrackRetail = qqTrackWholesale ? r5(qqTrackWholesale*2) : 0;
   const qqHasTrackPrice = qqTrackRetail > 0;
-  const wTot=r5(fabTot+mkR5+bendCost+qqTrackRetail);
+
+  // Install cost
+  const installCalc = calcQQInstallCost(id, tw, dr);
+  const installCost = installCalc.cost;
+
+  const wTot=r5(fabTot+mkR5+bendCost+qqTrackRetail+installCost);
 
   // Update result box
   $('qqresgrid'+id).innerHTML=`
     <div class="qq-ritem"><div class="rlab">Width × Drop</div><div class="rval">${tw} × ${dr}</div></div>
     <div class="qq-ritem"><div class="rlab">Fabric</div><div class="rval">${totM.toFixed(1)}m</div></div>
     <div class="qq-ritem"><div class="rlab">Fabric Cost</div><div class="rval">${fm5(fabTot)}</div></div>
-    <div class="qq-ritem"><div class="rlab">Make Cost</div><div class="rval">${fm5(mkR5)}${discNote}</div></div>
-    ${qqHasTrackPrice?`<div class="qq-ritem"><div class="rlab">Track</div><div class="rval">${fm5(qqTrackRetail)}</div></div>`:''}
+    <div class="qq-ritem"><div class="rlab">Make Cost</div><div class="rval">${fm5(mkR5)}</div></div>
+    ${qqHasTrackPrice?`<div class="qq-ritem"><div class="rlab">Track</div><div class="rval">${fm5(qqTrackRetail)}</div></div>`:'<div class="qq-ritem"><div class="rlab">Track</div><div class="rval" style="font-size:11px;color:#aa7744">Price TBC</div></div>'}
     ${bendCost>0?`<div class="qq-ritem"><div class="rlab">Bends</div><div class="rval">${fm(bendCost)}</div></div>`:''}
+    ${installCost>0?`<div class="qq-ritem"><div class="rlab">Install</div><div class="rval">${fm(installCost)}</div></div>`:''}
     <div class="qq-ritem"><div class="rlab">Est. Total</div><div class="rval big">${fm(wTot)}</div></div>
   `;
 
@@ -1679,7 +2095,7 @@ function calcQQW(id){
   const bd=[
     {l:'Curtain type',                  v:def.label},
     {l:'Track',                         v:def.track+' — hand draw, 40mm F/F bracket'},
-    {l:'Track price (retail inc. GST)',  v:qqHasTrackPrice?fm5(qqTrackRetail)+' (wholesale: '+fm(qqTrackWholesale)+')':'Placeholder — upload price list', sub:qqHasTrackPrice},
+    {l:'Track price (retail inc. GST)',  v:qqHasTrackPrice?fm5(qqTrackRetail)+' (wholesale: '+fm(qqTrackWholesale)+')':'Price list not yet loaded — TBC', sub:qqHasTrackPrice},
     {l:'Track width (entered)',         v:tw+'mm'},
     {l:'Drop (entered)',                v:dr+'mm'},
     {l:'Drop allowance',                v:allow+'mm'},
@@ -1693,18 +2109,21 @@ function calcQQW(id){
     {l:'Fabric cost price (ex-GST)',   v:fm(fc)+'/m'},
     {l:'Fabric retail (100% MU)',      v:fm(fabPm)+'/m'},
     {l:'Fabric total (↑$5)',           v:fm5(fabPm*totM),sub:true},
-    {l:'Make grid',                    v:'Norfolk '+(qqMkType==='pp'?'Pinch Pleat':'Wave Fold/Pencil')+' — continuous'+(window._earlyPayDiscount?' (20% early pay discount)':'')},
+    {l:'Make grid',                    v:'Norfolk '+(qqMkType==='pp'?'Pinch Pleat':'Wave Fold/Pencil')+' — continuous'},
     {l:'Make wholesale (ex-GST)',      v:fm(qqMkWholesale)},
     {l:'Make retail (60% MU, ↑$5)',   v:fm5(mkR5),sub:true},
     ...(bendCost>0?[{l:'Bend surcharge',v:fm(bendCost),sub:true}]:[]),
-    ...(qqHasTrackPrice?[]:[{l:'⚠ Note',v:'Track price not included — price list pending'}]),
+    {l:'▸ INSTALLATION',v:'',hdr:true},
+    {l:'Install',v:installCalc.label||(installCost>0?'Included':'Not included')},
+    ...(installCost>0?[{l:'Install cost (retail, ↑$5)',v:fm(installCost),sub:true}]:[]),
     {l:'ESTIMATED TOTAL (↑$5)',        v:fm(wTot),tot:true},
   ];
-  if($('qqbdC'+id)) $('qqbdC'+id).innerHTML=bd.map(b=>
-    `<div class="bdr ${b.tot?'tot qq':b.sub?'sub qq':''}"><span class="l">${b.l}</span><span class="v">${b.v}</span></div>`
-  ).join('');
+  if($('qqbdC'+id)) $('qqbdC'+id).innerHTML=bd.map(b=>{
+    if(b.hdr) return `<div style="margin-top:10px;padding:4px 0 3px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--qq);border-bottom:1px solid #5a3300">${b.l}</div>`;
+    return `<div class="bdr ${b.tot?'tot qq':b.sub?'sub qq':''}"><span class="l">${b.l}</span><span class="v">${b.v||'—'}</span></div>`;
+  }).join('');
 
-  storeQQWin(id,{wTot,fabTot,mkR5,bendCost,totM,loc,tw,dr,ct});
+  storeQQWin(id,{wTot,fabTot,mkR5,bendCost,qqTrackRetail,installCost,totM,loc,tw,dr,ct});
   updQQMeta(id);
   recalcQQ();
 }
@@ -1716,6 +2135,8 @@ function storeQQWin(id,d){
     total:d.wTot||w.total||0,
     fabTotal:d.fabTot||w.fabTotal||0,
     makeTotal:d.mkR5||w.makeTotal||0,
+    trackRetail:d.qqTrackRetail!==undefined?d.qqTrackRetail:w.trackRetail||0,
+    installCost:d.installCost!==undefined?d.installCost:w.installCost||0,
     bendCost:d.bendCost!==undefined?d.bendCost:w.bendCost||0,
     metres:typeof d.totM==='number'?d.totM:w.metres||0,
     loc:d.loc||gv('qqloc'+id)||w.loc||'',
@@ -1733,6 +2154,7 @@ function updQQMeta(id){
     const pts=[];
     if(w.tw&&w.dr) pts.push(`<span>${w.tw}×${w.dr}mm</span>`);
     if(w.metres) pts.push(`<span>${w.metres.toFixed(1)}m fabric</span>`);
+    if(w.installCost>0) pts.push(`<span>Install: ${fm(w.installCost)}</span>`);
     if(w.total)  pts.push(`<span><strong>${fm(w.total)}</strong></span>`);
     el.innerHTML=pts.join('<span style="color:#5a3300;margin:0 2px">·</span>');
   }
@@ -1740,13 +2162,18 @@ function updQQMeta(id){
 
 function recalcQQ(){
   const sur=1+(gn('gSur',0)/100);
-  let fab=0,mk=0,tot=0;
-  qqWins.forEach(w=>{fab+=w.fabTotal||0;mk+=w.makeTotal||0;tot+=w.total||0;});
+  let fab=0,mk=0,track=0,install=0,tot=0;
+  qqWins.forEach(w=>{
+    fab+=w.fabTotal||0; mk+=w.makeTotal||0;
+    track+=w.trackRetail||0; install+=w.installCost||0;
+    tot+=w.total||0;
+  });
   const grand=r5(tot*sur);
   $('tWins').textContent=qqWins.length;
   $('tFab').textContent=fm(fab);
   $('tMake').textContent=fm(mk);
   $('tBends').textContent='—';
+  if($('tInstall')) $('tInstall').textContent=install>0?fm(install):'—';
   $('tTot').textContent=fm(grand);
   $('grandTotal').textContent=fm5(grand);
   updQQSummary();
@@ -1755,11 +2182,14 @@ function recalcQQ(){
 function updQQSummary(){
   const tb=$('qqSumBody'); if(!tb)return;
   tb.innerHTML='';
+  let totFab=0,totMk=0,totTrack=0,totInstall=0,totAll=0;
   qqWins.forEach((w,i)=>{
     const def=QQ_DEFAULTS[w.ct]||QQ_DEFAULTS.pp_block;
     const tr=document.createElement('tr');
     tr.style.color=i%2===0?'#ddd':'#bbb';
     tr.style.background=i%2===0?'var(--chm)':'var(--chl)';
+    const trackVal = w.trackRetail||0;
+    const installVal = w.installCost||0;
     tr.innerHTML=`
       <td style="font-weight:700;color:var(--qq)">${i+1}</td>
       <td>${w.loc||'—'}</td>
@@ -1767,15 +2197,25 @@ function updQQSummary(){
       <td style="font-size:11px">${w.tw?w.tw+'×'+w.dr+'mm':'—'}</td>
       <td style="text-align:right">${fm(w.fabTotal||0)}</td>
       <td style="text-align:right">${fm(w.makeTotal||0)}</td>
+      <td style="text-align:right">${trackVal>0?fm(trackVal):'<span style="color:#888;font-size:10px">TBC</span>'}</td>
+      <td style="text-align:right">${installVal>0?fm(installVal):'<span style="color:#888;font-size:10px">—</span>'}</td>
       <td style="text-align:right;font-weight:700;color:var(--qq)">${fm(w.total||0)}</td>
     `;
+    totFab+=w.fabTotal||0; totMk+=w.makeTotal||0;
+    totTrack+=trackVal; totInstall+=installVal;
+    totAll+=w.total||0;
     tb.appendChild(tr);
   });
-  const tot=qqWins.reduce((s,w)=>s+(w.total||0),0);
   const tr=document.createElement('tr');
   tr.style.background='var(--chd)';
-  tr.innerHTML=`<td colspan="6" style="text-align:right;font-weight:700;color:#aaa;font-family:Oswald,sans-serif;letter-spacing:.04em">ESTIMATED TOTAL</td>
-    <td style="text-align:right;font-weight:700;color:var(--qq);font-size:14px;font-family:Oswald,sans-serif">${fm5(tot)}</td>`;
+  tr.innerHTML=`
+    <td colspan="4" style="text-align:right;font-weight:700;color:#aaa;font-family:Oswald,sans-serif;letter-spacing:.04em;padding:7px 4px">ESTIMATED TOTAL</td>
+    <td style="text-align:right;color:#aaa;font-size:11px;padding:7px 4px">${fm(totFab)}</td>
+    <td style="text-align:right;color:#aaa;font-size:11px;padding:7px 4px">${fm(totMk)}</td>
+    <td style="text-align:right;color:#aaa;font-size:11px;padding:7px 4px">${totTrack>0?fm(totTrack):'—'}</td>
+    <td style="text-align:right;color:#aaa;font-size:11px;padding:7px 4px">${totInstall>0?fm(totInstall):'—'}</td>
+    <td style="text-align:right;font-weight:700;color:var(--qq);font-size:14px;font-family:Oswald,sans-serif;padding:7px 4px">${fm5(totAll)}</td>
+  `;
   tb.appendChild(tr);
 }
 
@@ -2236,7 +2676,11 @@ function buildCard(id,num){
     <div id="fabSection${id}" style="display:none">
       <div class="sl">Fabric Details</div>
       <div class="fg">
-        <div class="fgrp"><label>Supplier</label><input type="text" id="sup${id}" placeholder="Supplier name" oninput="onSupInput('${id}')"></div>
+        <div class="fgrp" style="position:relative">
+          <label>Supplier</label>
+          <input type="text" id="sup${id}" placeholder="Supplier name" oninput="onSupInput('${id}');flibAC('${id}')" autocomplete="off">
+          <div class="flib-ac" id="flibAC${id}" style="display:none"></div>
+        </div>
 
         <!-- Fabric cost — prominent, mandatory -->
         <div class="fgrp fab-cost-box" id="fc2Box${id}">
@@ -2247,10 +2691,19 @@ function buildCard(id,num){
             <span class="iu">$/m</span>
           </div>
           <div class="fab-cost-hint" id="fc2Hint${id}">Cost price per metre ex-GST — retail calculated automatically</div>
+          <div id="flibSaveBadge${id}" style="display:none">
+            <span class="flib-badge" onclick="saveToFlib('${id}')">💾 Save fabric to library</span>
+          </div>
         </div>
 
-        <div class="fgrp"><label>Fabric Range</label><input type="text" id="rng${id}" placeholder="Range name"></div>
-        <div class="fgrp"><label>Colour</label><input type="text" id="col${id}" placeholder="Colour"></div>
+        <div class="fgrp" style="position:relative">
+          <label>Fabric Range</label>
+          <input type="text" id="rng${id}" placeholder="Range name" oninput="flibAC('${id}')" autocomplete="off">
+        </div>
+        <div class="fgrp" style="position:relative">
+          <label>Colour</label>
+          <input type="text" id="col${id}" placeholder="Colour" oninput="flibAC('${id}')" autocomplete="off">
+        </div>
 
         <div class="fgrp">
           <label>Fabric Category <span class="req">*</span></label>
@@ -2412,9 +2865,10 @@ function buildCard(id,num){
         <select id="tcolour${id}" onchange="updMeta('${id}');calcW('${id}')">
           <option value="">— Select colour —</option>
           <option value="White">White</option>
+          <option value="Birch White">Birch White</option>
           <option value="Black">Black</option>
-          <option value="Platinum">Platinum</option>
-          <option value="Cream">Cream</option>
+          <option value="Brown">Brown</option>
+          <option value="Magnolia">Magnolia</option>
           <option value="Other">Other (specify in notes)</option>
         </select>
       </div>
@@ -2482,6 +2936,19 @@ function buildCard(id,num){
         </div>
       </div>
       <div class="fgrp s2"><label>Install Cost (retail inc. GST) <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:9px;color:#aaa">— track fix + hanging combined</span></label><div class="comp price" id="installCost${id}" style="font-size:12px">$0.00</div></div>
+      <div class="fgrp">
+        <label>Override Install Cost <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:9px;color:#aaa">— leave blank to use calculated</span></label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="iw" style="flex:1"><span class="iu">$</span><input type="number" id="installOverride${id}" min="0" step="5" placeholder="auto" oninput="calcInstall('${id}')" style="text-align:right"></div>
+          <button onclick="clearInstallOverride('${id}')" style="padding:5px 10px;background:transparent;border:1.5px solid #555;border-radius:4px;color:#888;cursor:pointer;font-size:10px;white-space:nowrap" title="Clear override">✕ Clear</button>
+        </div>
+        <div id="installOverrideNote${id}" style="font-size:10px;color:var(--qq);margin-top:3px;display:none">⚡ Override active — calculated cost ignored</div>
+      </div>
+      <div class="fgrp" id="scaffoldGrp${id}" style="display:none">
+        <label style="color:var(--qq)">Scaffold / POA Surcharge <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:9px;color:#aaa">— drop &gt;4000mm</span></label>
+        <div class="iw" style="border-color:var(--qq)"><span class="iu" style="color:var(--qq)">$</span><input type="number" id="scaffoldSurcharge${id}" min="0" step="5" placeholder="Enter amount" oninput="calcInstall('${id}')" style="text-align:right"></div>
+        <div style="font-size:10px;color:var(--qq);margin-top:3px">⚠ Drop &gt;4000mm — may require scaffold. Price on application (POA). Enter agreed surcharge amount.</div>
+      </div>
       <div class="fgrp"><label>Install Notes</label><input type="text" id="installNotes${id}" placeholder="e.g. High ceiling, difficult access"></div>
     </div>
 
@@ -2570,7 +3037,23 @@ function buildCard(id,num){
           <option value="custom">Custom — enter number of bends</option>
         </select>
       </div>
-      <div class="fgrp" id="cbGrp${id}" style="display:none"><label>No. of Bends</label><div class="iw"><input type="number" id="cbNum${id}" value="1" min="1" max="6" oninput="calcW('${id}')"><span class="iu">bends</span></div></div>
+      <div class="fgrp" id="cbGrp${id}" style="display:none">
+        <label>No. of Bends</label>
+        <div class="iw"><input type="number" id="cbNum${id}" value="1" min="1" max="6" oninput="calcW('${id}')"><span class="iu">bends</span></div>
+      </div>
+      <div class="fgrp" id="cbTWGrp${id}" style="display:none">
+        <label>Total Combined Track Width</label>
+        <div class="iw"><input type="number" id="cbTW${id}" placeholder="Total width all sections" oninput="onCBTrackWidth('${id}')"><span class="iu">mm</span></div>
+        <div style="font-size:9px;color:#888;margin-top:3px">Enter the combined total of all track sections. Factory works from the supplied diagram.</div>
+      </div>
+      <div class="fgrp" id="cbDiagGrp${id}" style="display:none">
+        <div style="background:#1a1a2a;border:1.5px solid #555566;border-radius:var(--r);padding:8px 11px;font-size:11px;color:#aaaacc">
+          <div style="font-weight:700;color:#bbbbff;margin-bottom:3px">📐 Custom bend — diagram required</div>
+          Add a diagram sketch or photo to the job file for the factory to work from.
+          Unusual window shapes need a diagram showing section layout and bend angles.
+          <div style="margin-top:5px;font-size:10px;color:#888;font-style:italic">Quote is priced on the number of bends and total track width entered above.</div>
+        </div>
+      </div>
       <div class="fgrp"><label>Total Bend Cost (retail inc. GST)</label><div class="comp price" id="btot${id}">$0.00</div></div>
     </div>
     <div id="binfo${id}"></div>
@@ -2916,10 +3399,19 @@ function openBayModal(id) {
 
   // Restore bend size type
   _baySizeType = saved.sizeType || 'actual';
+  _bayProjDir  = saved.projDir  || 'forward';
   document.querySelectorAll('#baySizeType button').forEach((b,i)=>{
     b.classList.toggle('active', i===0?_baySizeType==='actual':_baySizeType==='projection');
   });
+  document.querySelectorAll('#bayProjDir button').forEach((b,i)=>{
+    b.classList.toggle('active', i===0?_bayProjDir==='forward':_bayProjDir==='backward');
+  });
   if($('bayProjVal') && saved.projVal) $('bayProjVal').value = saved.projVal;
+  // Update proj dir note text
+  const pdNote = $('bayProjDirNote');
+  if(pdNote) pdNote.textContent = _bayProjDir === 'forward'
+    ? 'Factory will add bracket projection forward of the sizes you have entered'
+    : 'Factory will deduct bracket projection backward from the sizes you have entered';
   updateBaySizeNote();
 
   // Restore notes
@@ -2942,13 +3434,25 @@ function setBaySizeType(type, btn) {
   updateBaySizeNote();
 }
 
+let _bayProjDir = 'forward'; // 'forward' | 'backward'
+
+function setBayProjDir(dir, btn) {
+  _bayProjDir = dir;
+  document.querySelectorAll('#bayProjDir button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const noteEl = $('bayProjDirNote');
+  if(noteEl) noteEl.textContent = dir === 'forward'
+    ? 'Factory will add bracket projection forward of the sizes you have entered'
+    : 'Factory will deduct bracket projection backward from the sizes you have entered';
+}
+
 function updateBaySizeNote() {
   const noteEl = $('baySizeNote');
   const projGrp = $('bayProjGrp');
   if(!noteEl) return;
   const isProj = (_baySizeType === 'projection');
   noteEl.textContent = isProj
-    ? 'Sizes entered are visible/finished dimensions — supplier adds bracket projection at each bend point'
+    ? 'Sizes entered are your measured dimensions — factory adjusts for bracket projection. Quote is based on your entered sizes only.'
     : 'Sizes entered are the actual finished bend dimensions — supplier bends to these exact measurements';
   noteEl.style.color = isProj ? 'var(--qq)' : '#888';
   if(projGrp) projGrp.style.display = isProj ? '' : 'none';
@@ -3047,11 +3551,11 @@ function buildCornerDiagram(cfg, vals) {
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--lml);background:var(--chd);border:1.5px solid ${orientation==='LR'?'var(--lm)':'#444'};border-radius:6px;padding:8px 12px">
         <input type="radio" name="cornerOrient_${_bayCurrentId}" value="LR" ${orientation==='LR'?'checked':''} onchange="onCornerOrient('LR')" style="accent-color:var(--lm)">
-        Left side runs down wall, Right runs along top
+        Diagram A
       </label>
       <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--lml);background:var(--chd);border:1.5px solid ${orientation==='RL'?'var(--lm)':'#444'};border-radius:6px;padding:8px 12px">
         <input type="radio" name="cornerOrient_${_bayCurrentId}" value="RL" ${orientation==='RL'?'checked':''} onchange="onCornerOrient('RL')" style="accent-color:var(--lm)">
-        Right side runs down wall, Left runs along top
+        Diagram B
       </label>
     </div>
   </div>
@@ -3158,6 +3662,7 @@ function saveBayMeasurements() {
 
   const data = {
     sizeType: _baySizeType,
+    projDir:  _bayProjDir,
     projVal: isProj ? projVal : 0,
     notes: $('bayNotes').value,
     sections,
@@ -3178,22 +3683,21 @@ function saveBayMeasurements() {
   hiddenFld.value = JSON.stringify(data);
 
   // ── Calculate total track width from bay sections ──
-  // Sum of all section widths = total track width
+  // Track width for quoting = sum of entered section sizes ONLY.
+  // The 'Allow for bracket projection' toggle is a note to the supplier about
+  // how to interpret the sizes — it does NOT change the track width in the quote.
   const sectionTotal = cfg.sections.reduce((sum,s) => sum + (sections[s.key]||0), 0);
-  // If 'allow for bracket projection', each bend point adds projection to track order
-  // but the curtain track width for fabric calc = the visible/finished section total
-  const numBendPoints = cfg.bends * 2; // each bend has 2 sides
+  // Track order info is for the supplier note only — not applied to quote width
+  const numBendPoints = cfg.bends * 2;
   const trackOrderTotal = isProj ? sectionTotal + (numBendPoints * projVal) : sectionTotal;
 
-  // Feed total into track width (tw) on the window card
+  // Feed section total into track width — never add projection to quoted width
   if(sectionTotal > 0) {
     const twInput = $('tw'+id);
     if(twInput) {
       twInput.value = sectionTotal;
-      // Trigger track width calc
       onTWDirect(id);
     }
-    // Also update the twCalc display
     const twCalc = $('twCalc'+id);
     if(twCalc) { twCalc.textContent = sectionTotal+'mm'; twCalc.style.color='var(--lm)'; }
   }
@@ -3210,7 +3714,7 @@ function saveBayMeasurements() {
 
   // Build badge
   const sizeTypeLabel = isProj
-    ? `Allow ${projVal}mm projection at each bend point`
+    ? `Allow ${projVal}mm projection — ${_bayProjDir === 'forward' ? 'forward of' : 'backward from'} sizes supplied`
     : 'Actual bend sizes';
   const sectionStrs = cfg.sections.map(s => {
     const v = sections[s.key];
@@ -3221,7 +3725,7 @@ function saveBayMeasurements() {
       + (isProj ? ` &nbsp;·&nbsp; Track order to supplier: <strong style="color:var(--qq)">${trackOrderTotal}mm</strong> (includes ${numBendPoints}× ${projVal}mm projection)` : '')
     : '';
   const notesStr = data.notes ? `<div style="margin-top:4px;font-size:10px;color:#aaa;font-style:italic">${data.notes}</div>` : '';
-  const orientStr = bt==='corner_single' ? ` &nbsp;·&nbsp; ${cornerOrientation==='LR'?'Left down / Right along':'Right down / Left along'}` : '';
+  const orientStr = bt==='corner_single' ? ` &nbsp;·&nbsp; ${cornerOrientation==='LR'?'Diagram A':'Diagram B'}` : '';
 
   const badge = `<div class="bbadge" style="background:#0d1a00;border-color:var(--lm);color:var(--lml);flex-direction:column;align-items:flex-start;gap:5px;cursor:pointer" onclick="openBayModal('${id}')">
     <div style="font-size:10px;font-weight:700;color:var(--lm);text-transform:uppercase;letter-spacing:.05em">📐 ${cfg.title}${orientStr} <span style="color:#666;font-size:9px;font-weight:400">(click to edit)</span></div>
@@ -3244,14 +3748,16 @@ function saveBayMeasurements() {
 
 function onBend(id){
   const bt=gv('btype'+id); const cfg=BENDS[bt]||BENDS.none;
-  $('cbGrp'+id).style.display=(bt==='custom')?'':'none';
+  const isCustom = (bt==='custom');
+  $('cbGrp'+id).style.display = isCustom ? '' : 'none';
+  if($('cbTWGrp'+id))  $('cbTWGrp'+id).style.display  = isCustom ? '' : 'none';
+  if($('cbDiagGrp'+id)) $('cbDiagGrp'+id).style.display = isCustom ? '' : 'none';
   const tkv=gv('tt'+id);
   const isS51=(tkv==='wave');
   const isMotor=(tkv==='motor_240'||tkv==='motor_bat');
   let bendNote='';
   if(bt!=='none'){
     if(isMotor){
-      // Motorised bends: price is POA — warn, don't add to total
       bendNote=`<div class="bbadge" style="background:#2a1800;border-color:#aa6600;color:#ffcc66">📐 ${cfg.label} — Bending charge is <strong>POA</strong>. Add manually before finalising quote. Standard track price included.</div>`;
     } else if(isS51){
       bendNote=`<div class="bbadge">📐 ${cfg.label} — $${BEND_CHARGE_WHOLESALE.toFixed(2)} per bend wholesale (SAN price list)</div>`;
@@ -3275,6 +3781,18 @@ function onBend(id){
   // Open bay/corner diagram if applicable
   if(bt==='bay_2bend'||bt==='bay_square'||bt==='corner_single'){
     setTimeout(()=>openBayModal(id), 100);
+  }
+  calcW(id);
+}
+
+// Custom bend — when total track width is entered, push it into the main tw field for pricing
+function onCBTrackWidth(id){
+  const val = gn('cbTW'+id, 0);
+  if(val > 0){
+    const twInput = $('tw'+id);
+    if(twInput){ twInput.value = val; onTWDirect(id); }
+    const twCalc = $('twCalc'+id);
+    if(twCalc){ twCalc.textContent = val+'mm'; twCalc.style.color = 'var(--lm)'; }
   }
   calcW(id);
 }
@@ -3502,9 +4020,13 @@ function onFabCostInput(id){
     if(hint) hint.style.display='none';
     // Auto-fill wave fold cost if same window
     if($('wfc'+id)&&!gn('wfc'+id,0)) { $('wfc'+id).value=val; onWFabCostInput(id); }
+    // Auto-save to fabric library (only when supplier + range also filled)
+    flibAutoSave(id);
+    flibCheckBadge(id);
   } else {
     if(box) box.classList.remove('filled');
     if(hint) hint.style.display='';
+    flibCheckBadge(id);
   }
   // Check if other windows share same supplier/fabric and update them
   autoFillFabricCost(id, 'pp');
@@ -4059,7 +4581,6 @@ function calcW(id){
     if($('bumpfMkR'+id)) $('bumpfMkR'+id).textContent = bumpfMkRetail>0 ? fm5(bumpfMkRetail) : '—';
   }
 
-  const discNote = window._earlyPayDiscount ? ' (incl. 20% early pay discount)' : '';
   const wTot=r5(fabTot+mkRetail+linMkRetail+linFabTot+bumpfMkRetail+bumpfFabTot+bendRetail+trackRetail+fsRetail);
 
   const als=[];
@@ -4093,8 +4614,8 @@ function calcW(id){
   if($('rfw'+id))  $('rfw'+id).textContent=reqW.toFixed(0)+'mm';
   if($('mtr'+id))  $('mtr'+id).textContent=totM.toFixed(2)+'m  ('+note+')';
   if($('fabR'+id)) $('fabR'+id).textContent=fc>0?fm5(fabSub+so+frt):'Enter fabric cost';
-  if($('mkR'+id))  $('mkR'+id).textContent=mkRetail>0?fm5(mkRetail)+(discNote?'*':''):'Enter width & drop';
-  if($('linMkR'+id)) $('linMkR'+id).textContent=hasLining&&linMkRetail>0?fm5(linMkRetail)+(discNote?'*':''):'—';
+  if($('mkR'+id))  $('mkR'+id).textContent=mkRetail>0?fm5(mkRetail):'Enter width & drop';
+  if($('linMkR'+id)) $('linMkR'+id).textContent=hasLining&&linMkRetail>0?fm5(linMkRetail):'—';
   if($('wt'+id))   $('wt'+id).textContent=wTot>0?fm(wTot):'—';
   // Update total display based on itemise toggle (adds install if not itemised)
   setTimeout(()=>updateWindowTotalDisplay(id), 10);
@@ -4167,15 +4688,18 @@ function calcW(id){
     {l:'Fabric total (rounded ↑$5)',v:fm5(fabSub+so+frt),sub:true},
     // ── MAKE COST ──
     {l:'▸ MAKE COST',v:'',hdr:true},
-    {l:'Norfolk grid used',v:(nkMakeType==='pp'?'SPP/Pinch Pleat':'Wave Fold/Pencil')+' — '+nkFabType+(window._earlyPayDiscount?' (20% early pay discount)':'')},
+    {l:'Norfolk grid used',v:(nkMakeType==='pp'?'SPP/Pinch Pleat':'Wave Fold/Pencil')+' — '+nkFabType},
     {l:'Make cost wholesale (ex-GST)',v:fm(mkWholesale)},
     {l:'Make cost retail (60% markup, ↑$5)',v:fm5(mkRetail),sub:true},
     ...(hasLining?[
       {l:'▸ LINING',v:'',hdr:true},
       {l:'Lining type',v:gv('linType'+id)||'attached'},
+      {l:'Lining fabric cost (ex-GST)',v:fm(gn('linCost'+id,0))+'/m'},
+      {l:'Lining fabric retail (100% MU)',v:fm(gn('linCost'+id,0)*2)+'/m'},
+      {l:'Lining meterage (same as curtain)',v:totM.toFixed(2)+'m'},
+      {l:'Lining fabric total (↑$5)',v:fm5(linFabTot),sub:true},
       {l:'Lining make wholesale (ex-GST)',v:fm(linMkWholesale)},
       {l:'Lining make retail (60% markup, ↑$5)',v:fm5(linMkRetail),sub:true},
-      {l:'Lining fabric retail',v:fm5(linFabTot),sub:true},
     ]:[]),
     ...(hasBumpf?[
       {l:'▸ BUMPF / INTERLINING',v:'',hdr:true},
@@ -4199,6 +4723,7 @@ function calcW(id){
     // ── INSTALL ──
     {l:'▸ INSTALLATION',v:'',hdr:true},
     {l:'Install type',v:installLabelMap[installDisp]||installDisp},
+    {l:'Drop (for rate calculation)',v:dr+'mm — '+(dr<=2700?'≤2700mm std rate $25/drop':dr<=4000?'2701–4000mm rate $50/drop':'>4000mm scaffold POA rate $50/drop')},
     {l:'Track fix',v:'$'+(wins.find(x=>x.id===id)?.trackFixCost||0)},
     {l:'Hanging drops × rate',v:(wins.find(x=>x.id===id)?.numDropsInstall||0)+' drops × $'+(wins.find(x=>x.id===id)?.hangRate||0)},
     {l:'Install total (retail, ↑$5)',v:fm(installCostVal),sub:true},
@@ -4545,13 +5070,12 @@ function calcWaveW(id){
   const waveFabType = 'continuous'; // wave fold fabric is always continuous for quoting
   const waveMkWholesale = getMakeCost('wp', waveFabType, tw, dr);
   const waveMkRetail = r5(waveMkWholesale * 1.6);
-  const discNote = window._earlyPayDiscount ? ' (incl. 20% early pay discount)' : '';
 
   const wTot=r5(fabTot+waveMkRetail+trackRetail+bendRetail+fsRetail);
 
   // Update make cost field in wave fold results section
   const waveMkEl = document.querySelector('#wave'+id+' .wf-make-cost');
-  if(waveMkEl) waveMkEl.textContent = waveMkRetail>0 ? fm5(waveMkRetail)+(discNote?'*':'') : '—';
+  if(waveMkEl) waveMkEl.textContent = waveMkRetail>0 ? fm5(waveMkRetail) : '—';
 
   // Alerts
   const als=[];
@@ -4581,7 +5105,7 @@ function calcWaveW(id){
     {l:'Fabric cost (ex-GST)',v:fm(fc)+'/m'},{l:'Fabric retail (100% MU)',v:fm(fabPm)+'/m'},
     {l:'Fabric subtotal',v:fm(fabSub)},{l:'Small order',v:fm(so)},{l:'Freight',v:fm(frt)},
     {l:'Fabric total (↑$5)',v:fm5(fabTot),sub:true},
-    {l:'Make grid',v:'Norfolk Wave Fold/PP — continuous'+discNote},
+    {l:'Make grid',v:'Norfolk Wave Fold/PP — continuous'},
     {l:'Make wholesale (ex-GST)',v:fm(waveMkWholesale)},
     {l:'Make retail (60% MU, ↑$5)',v:fm5(waveMkRetail),sub:true},
     ...(hasRealTrackPrice?[{l:'Track wholesale (ex-GST)',v:fm(trackWholesale)},{l:'Track retail (100% MU, ↑$5)',v:fm5(trackRetail),sub:true}]:[]),
@@ -4702,22 +5226,23 @@ function updFlickQty(id){
 // Install rates (retail inc. GST)
 const INSTALL_RATES = {
   // trackFix = per track retail inc. GST
-  // hangStd  = per drop standard height (drop ≤2800mm, track ≤4000mm) retail inc. GST
-  // hangHigh = per drop high fit / 2-man retail inc. GST
+  // hangStd  = per drop ≤2700mm retail inc. GST
+  // hangMid  = per drop 2701–4000mm retail inc. GST
+  // hangHigh = per drop high fit / 2-man (>4000mm) retail inc. GST
   // clearRate = per window retail inc. GST
-  // Note: high fit and hard substrates (plaster/brick/steel) both double trackFix
-  //       high fit also doubles hanging rate
-  none:         { trackFix:0,  hangStd:0,  hangHigh:0,  clearRate:0  },
-  timber:       { trackFix:40, hangStd:25, hangHigh:50, clearRate:0  },
-  plaster:      { trackFix:80, hangStd:25, hangHigh:50, clearRate:0  },
-  high:         { trackFix:80, hangStd:50, hangHigh:50, clearRate:0  },
-  clear_leave:  { trackFix:0,  hangStd:0,  hangHigh:0,  clearRate:10 },
-  clear_dispose:{ trackFix:0,  hangStd:0,  hangHigh:0,  clearRate:20 },
+  none:         { trackFix:0,  hangStd:0,  hangMid:0,  hangHigh:0,  clearRate:0  },
+  timber:       { trackFix:40, hangStd:25, hangMid:50, hangHigh:50, clearRate:0  },
+  plaster:      { trackFix:80, hangStd:25, hangMid:50, hangHigh:50, clearRate:0  },
+  high:         { trackFix:80, hangStd:50, hangMid:50, hangHigh:50, clearRate:0  },
+  clear_leave:  { trackFix:0,  hangStd:0,  hangMid:0,  hangHigh:0,  clearRate:10 },
+  clear_dispose:{ trackFix:0,  hangStd:0,  hangMid:0,  hangHigh:0,  clearRate:20 },
 };
 
 // ── Drop count for install hanging calculation ──
 // Rule: required fabric width (trackW × fullness, no other allowances)
-//       divided by 1500mm, rounded UP to next even number
+//       divided by 1500mm
+// One-way draw: round UP to next whole number
+// Centre close: round UP to next even number
 // High fit threshold: drop > 2800mm (corrected from 2400)
 // This applies to ALL fabric types — continuous uses same formula
 function calcInstallDrops(id) {
@@ -4737,9 +5262,18 @@ function calcInstallDrops(id) {
   // Required fabric width = trackWidth × fullness (no returns/hems/overlaps for this calc)
   const reqFabWidth = tw * fl; // in mm
   const rawDrops    = reqFabWidth / 1500;
-  // Round up to next even number
-  const evenDrops   = Math.ceil(rawDrops / 2) * 2;
-  return evenDrops;
+
+  // Determine opening type to decide rounding rule
+  const opening = gp('otype'+id) || 'centre';
+  const isCentre = (opening === 'centre');
+
+  if (isCentre) {
+    // Centre close: round up to next even number
+    return Math.ceil(rawDrops / 2) * 2;
+  } else {
+    // One-way draw: round up to next whole number
+    return Math.ceil(rawDrops);
+  }
 }
 
 // ── Existing track / existing curtain handlers ──
@@ -4766,12 +5300,31 @@ function calcInstall(id){
   // Number of drops for hanging
   const numDrops = calcInstallDrops(id);
 
-  // High fit: drop > 2800mm OR install type is 'high'
-  const isHighFit = (dr > 2800) || (t === 'high');
-  // Wide track: width > 4000mm doubles the per-drop hang rate independently
+  // 3-tier hang rate based on drop:
+  // ≤2700mm → $25/drop (standard)
+  // 2701–4000mm → $50/drop (mid/elevated)
+  // >4000mm → $50/drop + scaffold POA surcharge (manual entry)
+  // Install type 'high' always forces $50/drop regardless of drop height
+  const isForceHigh = (t === 'high');
+  const isScaffold  = (dr > 4000) && !isForceHigh;
+  const isMid       = (dr > 2700 && dr <= 4000) && !isForceHigh;
+  const isStd       = (dr <= 2700) && !isForceHigh;
+
+  let hangRate;
+  if(isForceHigh || isMid || isScaffold) {
+    hangRate = rates.hangMid; // $50
+  } else {
+    hangRate = rates.hangStd; // $25
+  }
+
+  // Show/hide scaffold surcharge field
+  const scaffoldGrp = $('scaffoldGrp'+id);
+  if(scaffoldGrp) scaffoldGrp.style.display = isScaffold ? '' : 'none';
+  const scaffoldSurcharge = isScaffold ? gn('scaffoldSurcharge'+id, 0) : 0;
+
+  // Wide track: width > 4000mm also triggers $50 rate
   const isWideTW  = (tw > 4000);
-  // Hang rate: $25 standard, $50 if high fit OR wide track (both conditions = same $50, not $100)
-  const hangRate  = (isHighFit || isWideTW) ? rates.hangHigh : rates.hangStd;
+  if(isWideTW && hangRate < rates.hangMid) hangRate = rates.hangMid;
 
   // Bay/corner window — bent track requires $80 track fix regardless of substrate
   const isBayBend = (gv('btype'+id)==='bay_2bend'||gv('btype'+id)==='bay_square'||gv('btype'+id)==='corner_single');
@@ -4782,43 +5335,74 @@ function calcInstall(id){
   const hangCost  = numDrops * hangRate;
   const clearCost = rates.clearRate;
 
-  // Existing curtains re-hang surcharge — doubles if high fit OR wide track
+  // Existing curtains re-hang surcharge
   const existCurtain = $('existCurtain'+id)&&$('existCurtain'+id).checked;
   const rehangBase   = 60;
-  const rehangCost   = existCurtain ? ((isHighFit||isWideTW) ? rehangBase*2 : rehangBase) : 0;
+  const rehangCost   = existCurtain ? (((isForceHigh||isMid||isScaffold)||isWideTW) ? rehangBase*2 : rehangBase) : 0;
 
-  const installCost = r5(trackFixCost + hangCost + clearCost + rehangCost);
+  const calcedInstallCost = r5(trackFixCost + hangCost + clearCost + rehangCost + scaffoldSurcharge);
 
-  // Build display string with clear reason for rate
+  // Check for manual override
+  const overrideEl = $('installOverride'+id);
+  const overrideVal = overrideEl ? parseFloat(overrideEl.value) : NaN;
+  const hasOverride = !isNaN(overrideVal) && overrideEl && overrideEl.value.trim() !== '';
+  const installCost = hasOverride ? overrideVal : calcedInstallCost;
+
+  // Show/hide override note
+  const noteEl = $('installOverrideNote'+id);
+  if(noteEl) noteEl.style.display = hasOverride ? '' : 'none';
+
+  // Build display string
   const costEl = $('installCost'+id);
   if (costEl) {
-    if (t==='none' && !existCurtain) {
+    if (hasOverride) {
+      costEl.textContent = '$'+installCost.toFixed(2)+'  —  manual override';
+      costEl.style.borderColor = 'var(--qq)';
+    } else if (t==='none' && !existCurtain) {
       costEl.textContent = existTrack?'$0.00 (existing track — no track fix)':'$0.00';
+      costEl.style.borderColor = '';
     } else if (t==='clear_leave'||t==='clear_dispose') {
       costEl.textContent = '$'+installCost.toFixed(2)+' (per window)';
+      costEl.style.borderColor = '';
     } else {
       const parts=[];
-      const rateReason = isHighFit ? ' (high fit >2800mm)' : isWideTW ? ' (wide track >4000mm)' : '';
-      if(trackFixCost>0) parts.push('Track fix: $'+trackFixCost+(isBayBend?' (bay/corner bend)':''));
+      let rateReason = '';
+      if(isForceHigh)     rateReason = ' (high fit — $50/drop)';
+      else if(isScaffold) rateReason = ' (drop '+dr+'mm >4000mm — scaffold POA)';
+      else if(isMid)      rateReason = ' (drop '+dr+'mm, 2701–4000mm tier)';
+      else                rateReason = ' (drop '+dr+'mm ≤2700mm — std rate)';
+      if(trackFixCost>0) parts.push('Track fix: $'+trackFixCost+(isBayBend?' (bay/corner)':''));
       else if(existTrack) parts.push('Track fix: $0 (existing)');
-      if(hangCost>0) parts.push('Hang: '+numDrops+' drops × $'+hangRate+rateReason);
+      if(hangCost>0) parts.push(numDrops+' drops × $'+hangRate+rateReason);
+      if(scaffoldSurcharge>0) parts.push('Scaffold POA: $'+scaffoldSurcharge.toFixed(2));
       if(rehangCost>0) parts.push('Re-hang: $'+rehangCost);
       costEl.textContent='$'+installCost.toFixed(2)+'  —  '+parts.join(' + ');
+      costEl.style.borderColor = isScaffold ? 'var(--qq)' : '';
     }
   }
 
   // Store on window state
   const w = wins.find(x=>x.id===id)||bWins.find(x=>x.id===id);
   if (w) {
-    w.installCost     = installCost;
-    w.trackFixCost    = trackFixCost;
-    w.hangCost        = hangCost;
-    w.rehangCost      = rehangCost;
-    w.numDropsInstall = numDrops;
-    w.hangRate        = hangRate;
-    w.existingTrack   = existTrack;
+    w.installCost       = installCost;
+    w.trackFixCost      = trackFixCost;
+    w.hangCost          = hangCost;
+    w.rehangCost        = rehangCost;
+    w.scaffoldSurcharge = scaffoldSurcharge;
+    w.numDropsInstall   = numDrops;
+    w.hangRate          = hangRate;
+    w.existingTrack     = existTrack;
+    w.installOverride   = hasOverride ? overrideVal : null;
   }
   buildJobSheet();
+}
+
+function clearInstallOverride(id){
+  const el = $('installOverride'+id);
+  if(el){ el.value=''; }
+  calcInstall(id);
+  updateWindowTotalDisplay(id);
+  recalc();
 }
 
 // ══════════════════════════════════════════
@@ -4845,6 +5429,7 @@ function buildJobSheet(){
   const tbody=$('sumBody');
   const tfoot=$('sumFoot');
   const discNote=$('sumDiscountNote');
+  if(discNote) discNote.style.display='none'; // discount no longer applied
   if(!hdr||!tbody) return;
 
   // Column definitions — label (can use \n for stacking), width, align
@@ -4970,11 +5555,6 @@ function buildJobSheet(){
       <td style="padding:7px 4px;text-align:right;color:#aaa;font-size:11px">$${grandInstall.toFixed(2)}</td>
       <td style="padding:7px 4px;text-align:right;color:var(--lm);font-size:14px;font-family:Oswald,sans-serif">$${grandWithSur.toFixed(2)}</td>
     </tr>`;
-
-  // Discount note
-  if(discNote) discNote.textContent = window._earlyPayDiscount
-    ? '* Make costs include 20% Norfolk early payment discount (invoices paid within 30 days)'
-    : '';
 
   // Update print header fields
   const phn=$('phName'),pha=$('phAddr'),phph=$('phPhone'),phem=$('phEmail');
@@ -6076,19 +6656,251 @@ function loadQuote(){
 // ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   $('qDate').value=new Date().toISOString().split('T')[0];
-  // Show staff selector on load — must choose before quote number generates
+  // Build staff buttons then show modal — ensures buttons are visible before modal appears
   buildStaffButtons();
-  // staffModal already visible (display:flex in HTML)
+  $('staffModal').style.display='flex';
   updAssume();
-  // Default: 20% early payment discount is ON
-  window._earlyPayDiscount = true;
-  const track = $('discountTrack');
-  const thumb = $('discountThumb');
-  const label = $('discountLabel');
-  if(track) track.style.background = 'var(--lm)';
-  if(thumb) thumb.style.left = '18px';
-  if(label) label.innerHTML = '20% early payment discount: <strong style="color:var(--lm)">ON — Norfolk invoices paid within 30 days</strong>';
+  flibUpdateCount();
+  // Discount is never applied — Norfolk grid prices used as-is
+  window._earlyPayDiscount = false;
 });
+// ══════════════════════════════════════════
+// FABRIC LIBRARY
+// Persisted to localStorage as 'acb_fabric_library'
+// Each entry: { id, supplier, range, colour, cost, category, widthType, savedAt, usedAt, useCount }
+// ══════════════════════════════════════════
+
+function flibLoad() {
+  try { return JSON.parse(localStorage.getItem('acb_fabric_library') || '[]'); } catch(e) { return []; }
+}
+function flibSave(lib) {
+  localStorage.setItem('acb_fabric_library', JSON.stringify(lib));
+  flibUpdateCount();
+}
+function flibKey(sup, rng, col) {
+  return [sup,rng,col].map(s=>(s||'').trim().toLowerCase()).join('||');
+}
+function flibUpdateCount() {
+  const lib = flibLoad();
+  const el = $('flibCount');
+  if(el) el.textContent = lib.length ? lib.length + ' fabric' + (lib.length===1?'':'s') + ' saved' : '';
+}
+
+// Called whenever fabric cost is confirmed — auto-save to library
+function flibAutoSave(id) {
+  const sup  = (gv('sup'+id)||'').trim();
+  const rng  = (gv('rng'+id)||'').trim();
+  const col  = (gv('col'+id)||'').trim();
+  const cost = gn('fc2'+id, 0);
+  if(!sup || !rng || cost <= 0) return; // need at minimum supplier + range + cost
+
+  const lib  = flibLoad();
+  const key  = flibKey(sup, rng, col);
+  const idx  = lib.findIndex(f => flibKey(f.supplier, f.range, f.colour) === key);
+  const cat  = gv('fcat'+id) || '';
+  const wt   = (document.querySelector('#fwidthtype'+id+' .pill.on') || {}).dataset?.val || 'continuous';
+  const now  = Date.now();
+
+  if(idx >= 0) {
+    const existing = lib[idx];
+    if(existing.cost !== cost) {
+      // Price changed — update silently and note the change
+      existing.cost    = cost;
+      existing.category = cat || existing.category;
+      existing.widthType= wt;
+      existing.savedAt = now;
+      existing.useCount = (existing.useCount||0) + 1;
+      existing.usedAt  = now;
+      showCopyToast('Fabric library updated: '+sup+' '+rng+(col?' — '+col:'')+' @ $'+cost.toFixed(2)+'/m ✓');
+    } else {
+      existing.useCount = (existing.useCount||0) + 1;
+      existing.usedAt  = now;
+    }
+    lib.splice(idx, 1);
+    lib.unshift(existing); // move to top (most recently used)
+  } else {
+    lib.unshift({ id:'fl'+now, supplier:sup, range:rng, colour:col, cost, category:cat, widthType:wt, savedAt:now, usedAt:now, useCount:1 });
+    showCopyToast('Fabric saved to library: '+sup+' '+rng+(col?' — '+col:'')+' ✓');
+  }
+  flibSave(lib);
+  renderFlibTable();
+  // Show save badge only when lib doesn't have it yet (already saved = badge hidden)
+  const badge = $('flibSaveBadge'+id);
+  if(badge) badge.style.display = 'none';
+}
+
+// Manual save button — shows when fabric has unsaved changes
+function saveToFlib(id) {
+  flibAutoSave(id);
+}
+
+// Show save badge when cost is entered and fabric isn't in library yet
+function flibCheckBadge(id) {
+  const sup  = (gv('sup'+id)||'').trim();
+  const rng  = (gv('rng'+id)||'').trim();
+  const col  = (gv('col'+id)||'').trim();
+  const cost = gn('fc2'+id, 0);
+  const badge = $('flibSaveBadge'+id);
+  if(!badge) return;
+  if(!sup || !rng || cost <= 0) { badge.style.display='none'; return; }
+  const lib = flibLoad();
+  const key = flibKey(sup, rng, col);
+  const exists = lib.find(f => flibKey(f.supplier,f.range,f.colour)===key && f.cost===cost);
+  badge.style.display = exists ? 'none' : '';
+}
+
+// Autocomplete — fires on supplier/range/colour input
+function flibAC(id) {
+  const sup = (gv('sup'+id)||'').trim().toLowerCase();
+  const rng = (gv('rng'+id)||'').trim().toLowerCase();
+  const col = (gv('col'+id)||'').trim().toLowerCase();
+  const ac  = $('flibAC'+id);
+  if(!ac) return;
+
+  const query = [sup,rng,col].filter(Boolean).join(' ');
+  if(!query) { ac.style.display='none'; return; }
+
+  const lib = flibLoad();
+  const matches = lib.filter(f => {
+    const haystack = [f.supplier,f.range,f.colour].join(' ').toLowerCase();
+    return query.split(' ').every(word => haystack.includes(word));
+  }).slice(0, 8);
+
+  if(!matches.length) { ac.style.display='none'; return; }
+
+  ac.innerHTML = matches.map(f => `
+    <div class="flib-ac-item" onclick="flibApply('${id}','${f.id}')">
+      <span class="flib-ac-price">$${f.cost.toFixed(2)}/m</span>
+      <div class="flib-ac-sup">${f.supplier}</div>
+      <div class="flib-ac-rng">${f.range}${f.colour?' <span style="color:#888;font-weight:400">— '+f.colour+'</span>':''}</div>
+      <div class="flib-ac-col">${f.category?'<span style="color:#666">'+f.category+'</span>':''} ${f.useCount>1?'<span style="color:#555">used '+f.useCount+'×</span>':''}</div>
+    </div>`).join('');
+  ac.style.display = '';
+
+  // Close on outside click
+  setTimeout(() => {
+    const close = (e) => {
+      if(!e.target.closest('#flibAC'+id) && !e.target.closest('#sup'+id) && !e.target.closest('#rng'+id) && !e.target.closest('#col'+id)){
+        ac.style.display='none';
+        document.removeEventListener('click', close);
+      }
+    };
+    document.addEventListener('click', close);
+  }, 0);
+}
+
+// Apply a library entry to a window
+function flibApply(winId, flibId) {
+  const lib = flibLoad();
+  const f = lib.find(x => x.id === flibId);
+  if(!f) return;
+
+  if($('sup'+winId))  $('sup'+winId).value  = f.supplier;
+  if($('rng'+winId))  $('rng'+winId).value  = f.range;
+  if($('col'+winId))  $('col'+winId).value  = f.colour || '';
+  if($('fc2'+winId))  $('fc2'+winId).value  = f.cost;
+  if($('fcat'+winId)) $('fcat'+winId).value = f.category || 'blockout_coated';
+
+  // Set width type pill
+  if(f.widthType) {
+    document.querySelectorAll('#fwidthtype'+winId+' .pill').forEach(p=>p.classList.remove('on'));
+    const pill = document.querySelector('#fwidthtype'+winId+' [data-val="'+f.widthType+'"]');
+    if(pill) pill.classList.add('on');
+    if($('ftype'+winId)) $('ftype'+winId).value = f.widthType;
+  }
+
+  const ac = $('flibAC'+winId);
+  if(ac) ac.style.display = 'none';
+
+  // Update use count
+  const idx = lib.findIndex(x=>x.id===flibId);
+  if(idx>=0){ lib[idx].useCount=(lib[idx].useCount||0)+1; lib[idx].usedAt=Date.now(); lib.splice(0,0,lib.splice(idx,1)[0]); }
+  flibSave(lib);
+
+  onFabCostInput(winId);
+  onFabCat(winId);
+  calcW(winId);
+  showCopyToast('Fabric loaded: '+f.supplier+' '+f.range+(f.colour?' — '+f.colour:'')+' ✓');
+}
+
+// Library panel toggle
+let _flibOpen = false;
+function togFlibPanel() {
+  _flibOpen = !_flibOpen;
+  const body = $('flibBody');
+  const arrow = $('flibArrow');
+  if(body)  body.style.display  = _flibOpen ? '' : 'none';
+  if(arrow) arrow.textContent   = _flibOpen ? '▲ hide' : '▼ show';
+  if(_flibOpen) renderFlibTable();
+}
+
+// Render the library table
+function renderFlibTable() {
+  const tbl = $('flibTable');
+  if(!tbl) return;
+  const q = ((gv('flibSearch')||'').trim().toLowerCase());
+  const lib = flibLoad();
+  const rows = q ? lib.filter(f => [f.supplier,f.range,f.colour].join(' ').toLowerCase().includes(q)) : lib;
+
+  if(!rows.length) {
+    tbl.innerHTML = '<div style="padding:14px;text-align:center;color:#555;font-size:12px;font-style:italic">'+(lib.length?'No results for that search.':'No fabrics saved yet — they\'ll appear here as you quote.')+'</div>';
+    return;
+  }
+
+  const catLabels = {blockout_coated:'Blockout',sheer:'Sheer',uncoated:'Uncoated',triple_weave:'Triple Weave'};
+  const wtLabels  = {continuous:'Cont.',narrow:'Narrow',wide:'Wide'};
+
+  tbl.innerHTML = rows.map((f,i) => `
+    <div class="flib-row" style="background:${i%2===0?'var(--chd)':'var(--chm)'}">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:10px;color:var(--lml);font-weight:700;text-transform:uppercase;letter-spacing:.04em">${f.supplier}</div>
+        <div style="font-size:12px;color:#ddd;font-weight:600">${f.range}${f.colour?' <span style="color:#888;font-weight:400">— '+f.colour+'</span>':''}</div>
+        <div style="font-size:10px;color:#666">${catLabels[f.category]||f.category||''} ${f.widthType?'· '+(wtLabels[f.widthType]||f.widthType):''} ${f.useCount>1?'· used '+f.useCount+'×':''}</div>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:var(--lm);font-family:Oswald,sans-serif;white-space:nowrap">$${f.cost.toFixed(2)}<span style="font-size:9px;color:#666">/m</span></div>
+      <button class="flib-del" onclick="flibDelete('${f.id}')" title="Remove from library">✕</button>
+    </div>`).join('');
+}
+
+function flibDelete(flibId) {
+  let lib = flibLoad();
+  const f = lib.find(x=>x.id===flibId);
+  if(!f) return;
+  if(!confirm('Remove '+f.supplier+' '+f.range+(f.colour?' — '+f.colour:'')+' from the fabric library?')) return;
+  lib = lib.filter(x=>x.id!==flibId);
+  flibSave(lib);
+  renderFlibTable();
+}
+
+function clearFlibConfirm() {
+  const lib = flibLoad();
+  if(!lib.length) return;
+  if(!confirm('Clear the entire fabric library ('+lib.length+' fabric'+(lib.length===1?'':'s')+')?\n\nThis cannot be undone.')) return;
+  flibSave([]);
+  renderFlibTable();
+}
+
+// ══════════════════════════════════════════
+// HELP MODAL
+// ══════════════════════════════════════════
+function showHelp() {
+  $('helpModal').style.display = 'flex';
+  // Always start on first tab
+  document.querySelectorAll('.help-tab-content').forEach((el,i) => el.style.display = i===0?'':'none');
+  document.querySelectorAll('.help-tab').forEach((el,i) => el.classList.toggle('active', i===0));
+}
+function closeHelp() {
+  $('helpModal').style.display = 'none';
+}
+function helpTab(idx, btn) {
+  document.querySelectorAll('.help-tab-content').forEach((el,i) => el.style.display = i===idx?'':'none');
+  document.querySelectorAll('.help-tab').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  // Scroll to top of modal content
+  const box = $('helpBox');
+  if(box) box.scrollTop = 0;
+}
+
 </script>
 </body>
 </html>
