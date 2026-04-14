@@ -104,6 +104,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .pg{display:flex;gap:5px;flex-wrap:wrap}
 .pill{padding:5px 11px;border:1.5px solid #555;border-radius:14px;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.03em;color:#aaa;background:var(--chl);transition:all .12s;user-select:none;white-space:nowrap}
 .pill:hover{border-color:var(--lm);color:var(--lm)}
+.pill:focus{outline:2px solid var(--lm);outline-offset:2px}
 .pill.on{background:var(--lm);border-color:var(--lm);color:var(--chd)}
 .pill.qq-on{background:var(--qq);border-color:var(--qq);color:#fff}
 
@@ -2228,22 +2229,8 @@ function updQQSummary(){
 function validateWin(id){
   const issues=[];
   const ct=gv('ct'+id);
-  if(!ct){ issues.push('Curtain type'); return issues; }
-  if(!gv('loc'+id)) issues.push('Room / location name');
-  const op=gn('tw'+id,0)||gn('op'+id,0);
-  const dr=gn('dr'+id,0)||gn('wdr'+id,0);
-  if(!op) issues.push('Track / rod width');
-  if(!dr) issues.push('Required drop');
-  const fc=gn('fc2'+id,0)||gn('wfc'+id,0);
-  if(!fc) issues.push('Fabric cost per metre');
-  if(!gv('tt'+id)) issues.push('Track / rod type');
-  // Pinch pleat: double or triple pleat must be selected
-  if(ct==='pinch'){
-    const sppHeading=(document.querySelector('#sppType'+id+' .pill.on')||{}).dataset?.val||'pinch';
-    if(sppHeading==='pinch' && !gp('pleatCount'+id)){
-      issues.push('Double or Triple pleat selection');
-    }
-  }
+  // Only require curtain type to be selected — everything else can be copied blank
+  if(!ct){ issues.push('Curtain type (select Pencil Pleat, Wave Fold, or Pinch Pleat first)'); return issues; }
   return issues;
 }
 
@@ -2320,7 +2307,18 @@ function addWin(){
     }
   }, 80);
 }
+function clearCopyBadge(id){
+  const badge=$('copyBadge'+id); if(badge) badge.style.display='none';
+  const bar=$('copyBar'+id); if(bar) bar.style.display='none';
+  // Reset window name to location or default
+  const wnEl=$('wn'+id);
+  if(wnEl) wnEl.textContent = gv('loc'+id)||'New Window';
+  showCopyToast('Marked as new window ✓');
+}
+
 function removeWin(id){
+  const loc = gv('loc'+id)||('Window '+(wins.findIndex(w=>w.id===id)+1));
+  if(!confirm('Remove "'+loc+'"?\n\nThis cannot be undone.')) return;
   wins=wins.filter(w=>w.id!==id);
   const el=$('c'+id); if(el)el.remove();
   if(!wins.length){$('noWin').style.display='';$('sumPanel').style.display='none';}
@@ -2512,7 +2510,7 @@ function buildCard(id,num){
   const trackOpts=TRACKS.map(t=>`<option value="${t.v}">${t.lb}</option>`).join('');
   el.innerHTML=`
   <div class="wch" onclick="togWin('${id}')">
-    <div class="wtr"><div class="wnum">${num}</div><span class="wname" id="wn${id}">New Window</span></div>
+    <div class="wtr"><div class="wnum">${num}</div><span class="wname" id="wn${id}">New Window</span><span id="copyBadge${id}" style="display:none;background:#554400;border:1px solid #aa8800;color:#ffcc66;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.05em;margin-left:6px">⧉ COPY</span></div>
     <div class="fbc g8">
       <div class="wmeta" id="wm${id}"></div>
       <div onclick="event.stopPropagation()" style="position:relative;margin-left:8px">
@@ -2533,8 +2531,13 @@ function buildCard(id,num){
     </div>
   </div>
   <div class="wb open" id="b${id}">
+    <!-- Copy indicator bar — shown only on copied windows -->
+    <div id="copyBar${id}" style="display:none;background:#2a1800;border-bottom:1px solid #554400;padding:6px 14px;align-items:center;justify-content:space-between">
+      <div style="font-size:11px;color:#ffcc66;font-weight:600">⧉ This window was copied — edit the details below to make it unique</div>
+      <button onclick="clearCopyBadge('${id}')" style="background:transparent;border:1px solid #886600;color:#aa7700;border-radius:4px;padding:3px 10px;font-size:10px;cursor:pointer;white-space:nowrap">✓ Mark as new window</button>
+    </div>
     <div class="fg">
-      <div class="fgrp s2"><label>Window Name / Location <span class="req">*</span></label><input type="text" id="loc${id}" placeholder="e.g. Lounge Left, Master Bedroom" oninput="updMeta('${id}')"></div>
+      <div class="fgrp s2"><label>Window Name / Location <span class="req">*</span></label><input type="text" id="loc${id}" tabindex="0" placeholder="e.g. Lounge Left, Master Bedroom" oninput="updMeta('${id}')"></div>
       <div class="fgrp"><label>Curtain Type <span class="req">*</span></label>
         <select id="ct${id}" onchange="onCT('${id}')">
           <option value="">— Select —</option>
@@ -2739,7 +2742,7 @@ function buildCard(id,num){
         </div>
         <div class="fgrp" id="rollSizeCustomGrp${id}" style="display:none">
           <label>Custom Roll Width</label>
-          <div class="iw"><input type="number" id="rw${id}" value="1500" oninput="calcW('${id}')"><span class="iu">mm</span></div>
+          <div class="iw"><input type="number" id="rw${id}" value="1500" oninput="onRWCustomInput('${id}')"><span class="iu">mm</span></div>
         </div>
         <!-- Hidden input holds the actual roll width value always -->
         <input type="hidden" id="rwVal${id}" value="3000">
@@ -2750,9 +2753,9 @@ function buildCard(id,num){
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;color:#ffdd99">
             <input type="checkbox" id="rwConfirm${id}" onchange="onRWConfirm('${id}')"
               style="width:16px;height:16px;accent-color:#ffcc00;cursor:pointer">
-            I have confirmed the roll width for this fabric is <strong id="rwConfirmVal${id}" style="margin:0 4px;color:#fff">3000mm</strong> — ok to calculate
+            I have confirmed the roll width for this fabric is <strong id="rwConfirmVal${id}" style="margin:0 4px;color:#fff">—</strong> — ok to calculate
           </label>
-          <div style="font-size:9px;color:#886600;margin-top:4px;font-style:italic">This check carries through to copied windows with the same supplier, fabric and colour.</div>
+          <div style="font-size:9px;color:#886600;margin-top:4px;font-style:italic">Select or enter the roll width above first, then tick to confirm. Confirmation carries through to copied windows with the same supplier, fabric and colour.</div>
         </div>
 
         <div class="fgrp">
@@ -2771,8 +2774,8 @@ function buildCard(id,num){
         <div class="fgrp" id="wbaseGrp${id}">
           <label>Bottom Edge</label>
           <div class="pg" id="wb${id}">
-            <div class="pill" data-val="yes" onclick="onWbasePill(this,'${id}')">Weighted Base</div>
-            <div class="pill on" data-val="no" onclick="onWbasePill(this,'${id}')">Open Headed</div>
+            <div class="pill on" data-val="yes" onclick="onWbasePill(this,'${id}')">Weighted Base</div>
+            <div class="pill" data-val="no" onclick="onWbasePill(this,'${id}')">Open Headed</div>
           </div>
         </div>
         <!-- Bottom hem size — shown when open headed -->
@@ -3135,6 +3138,14 @@ function buildCard(id,num){
       <div class="mt14 fbw">
         <button style="background:var(--chd);border:2px solid var(--lm);color:var(--lm);padding:6px 14px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:all .15s" id="bdbtn${id}" onclick="togBD('${id}')">▼ Show Cost Breakdown</button>
         <button id="bdPrintBtn${id}" onclick="printBreakdown('${id}')" style="display:none;background:var(--chm);border:1.5px solid #666;color:#bbb;padding:6px 12px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s" onmouseover="this.style.borderColor='var(--lm)';this.style.color='var(--lm)'" onmouseout="this.style.borderColor='#666';this.style.color='#bbb'">🖨 Print Breakdown</button>
+        <div style="position:relative;display:inline-block">
+          <button style="background:var(--chd);border:1.5px solid var(--lm);color:var(--lm);padding:6px 14px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase" onclick="togCopyMenu('${id}','bottom')">⧉ Copy ▾</button>
+          <div id="copyMenu2${id}" style="display:none;position:absolute;left:0;bottom:100%;margin-bottom:4px;background:var(--chd);border:1.5px solid var(--lmd);border-radius:6px;z-index:50;min-width:220px;box-shadow:0 -4px 16px rgba(0,0,0,.4)">
+            <div style="padding:7px 12px;font-size:9px;color:var(--lml);letter-spacing:.07em;text-transform:uppercase;border-bottom:1px solid #333">Copy this window</div>
+            <div class="copy-opt" onclick="dupWin('${id}','full')"><div style="font-weight:600;color:var(--lm)">⧉ Full Copy</div></div>
+            <div class="copy-opt" onclick="dupWin('${id}','template')"><div style="font-weight:600;color:var(--lml)">⧉ Template Copy</div></div>
+          </div>
+        </div>
         <button class="bd2 bsm" onclick="removeWin('${id}')">✕ Remove Window</button>
       </div>
       <div class="bd" id="bd${id}">
@@ -3184,6 +3195,14 @@ function buildCard(id,num){
       <div id="walts${id}"></div>
       <div class="mt14 fbw">
         <button style="background:var(--chd);border:2px solid var(--lm);color:var(--lm);padding:6px 14px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:all .15s" id="wbdbtn${id}" onclick="togWaveBD('${id}')">▼ Show Cost Breakdown</button>
+        <div style="position:relative;display:inline-block">
+          <button style="background:var(--chd);border:1.5px solid var(--lm);color:var(--lm);padding:6px 14px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase" onclick="togCopyMenu('${id}','bottom')">⧉ Copy ▾</button>
+          <div id="copyMenu2${id}" style="display:none;position:absolute;left:0;bottom:100%;margin-bottom:4px;background:var(--chd);border:1.5px solid var(--lmd);border-radius:6px;z-index:50;min-width:220px;box-shadow:0 -4px 16px rgba(0,0,0,.4)">
+            <div style="padding:7px 12px;font-size:9px;color:var(--lml);letter-spacing:.07em;text-transform:uppercase;border-bottom:1px solid #333">Copy this window</div>
+            <div class="copy-opt" onclick="dupWin('${id}','full')"><div style="font-weight:600;color:var(--lm)">⧉ Full Copy</div></div>
+            <div class="copy-opt" onclick="dupWin('${id}','template')"><div style="font-weight:600;color:var(--lml)">⧉ Template Copy</div></div>
+          </div>
+        </div>
         <button class="bd2 bsm" onclick="removeWin('${id}')">&#x2715; Remove Window</button>
       </div>
       <div class="bd" id="wbd${id}"><h4>Wave Fold Breakdown — <span id="wbdT${id}"></span></h4><div id="bdIntegrity${id}" style="display:none"></div><div id="wbdC${id}"></div></div>
@@ -3194,13 +3213,16 @@ function buildCard(id,num){
   </div><!-- /wb -->
   `;
   con.appendChild(el);
+  makePillsTabable(el);
   // Apply default install (timber) and calculate immediately
   setTimeout(()=>{
     calcInstall(id);
     // Set initial overlap visibility (hidden until cord draw selected)
     onTDraw(id);
-    // Set initial allowance display
+    // Set initial allowance display — weighted base is default so hide bottom hem group
     calcAllowance(id);
+    const bhGrp=$('botHemGrp'+id);
+    if(bhGrp) bhGrp.style.display='none';
   }, 30);
 }
 
@@ -3237,8 +3259,19 @@ function spp(wid,val){
 function onTT(id){
   const tv=gv('tt'+id); const tk=TRACKS.find(t=>t.v===tv);
   const bsel=$('bkt'+id);
+  const prevBkt = bsel ? bsel.value : '';
   if(!tk||!tk.bkts.length) bsel.innerHTML='<option value="">— No bracket options —</option>';
-  else bsel.innerHTML='<option value="">— Select bracket —</option>'+tk.bkts.map(b=>`<option value="${b.v}">${b.lb}</option>`).join('');
+  else {
+    bsel.innerHTML='<option value="">— Select bracket —</option>'+tk.bkts.map(b=>`<option value="${b.v}">${b.lb}</option>`).join('');
+    // Auto-select: restore previous bracket if it exists in new list, else pick first option
+    if(prevBkt && bsel.querySelector('option[value="'+prevBkt+'"]')){
+      bsel.value = prevBkt;
+    } else if(!window._copyInProgress) {
+      // Auto-select first bracket for new windows (not during copy — copy sets its own bracket)
+      const firstBkt = tk.bkts[0];
+      if(firstBkt) { bsel.value = firstBkt.v; onBkt(id); }
+    }
+  }
   // Show flick stick section for wave fold track — always required
   const fsSection=$('fsSection'+id);
   if(fsSection){
@@ -3861,6 +3894,7 @@ function onCT(id){
       if(ttSel){ ttSel.value='s79'; onTT(id); }
     }
     setTimeout(()=>{
+      if(window._copyInProgress) return; // skip auto-defaults during copy
       // Set bracket to 40mm H/D Face Fix if not already set
       const bktSel=$('bkt'+id);
       if(bktSel && !bktSel.value){ bktSel.value='s79_40'; onBkt(id); }
@@ -3877,6 +3911,7 @@ function onCT(id){
       if(ttSel){ ttSel.value='wave'; onTT(id); }
     }
     setTimeout(()=>{
+      if(window._copyInProgress) return; // skip auto-defaults during copy
       const bktSel=$('bkt'+id);
       if(bktSel && !bktSel.value){ bktSel.value='wave_ff80'; onBkt(id); }
       else if(bktSel && noBracket){ bktSel.value='wave_ff80'; onBkt(id); }
@@ -3887,6 +3922,7 @@ function onCT(id){
   }
   // Set type-specific defaults after DOM settles
   setTimeout(()=>{
+    if(window._copyInProgress) return; // skip auto-defaults during copy
     // Fullness default — pinch pleat = 2.5×, pencil pleat = 2.25×
     const defFull = (t==='pinch') ? '2.5' : '2.25';
     document.querySelectorAll('#full'+id+' .pill').forEach(p=>p.classList.remove('on'));
@@ -4119,6 +4155,11 @@ function spFabWidth(id, val){
     if(p3000){ p3000.classList.add('on'); if($('rwVal'+id)) $('rwVal'+id).value='3000'; if($('rw'+id)) $('rw'+id).value='3000'; }
     $('rollSizeCustomGrp'+id).style.display='none';
     if(rwCGrp) rwCGrp.style.display='';
+    // Update confirm label to match default 3000mm
+    const confVal=$('rwConfirmVal'+id);
+    if(confVal) confVal.textContent='3000mm';
+    // Reset confirmation — width type changed
+    const chk=$('rwConfirm'+id); if(chk&&chk.checked){chk.checked=false;onRWConfirm(id);}
   } else if(val==='wide'){
     if(lbl) lbl.innerHTML='Roll Width <span style="color:#aaa;font-size:9px;font-weight:400">(wide width)</span>';
     document.querySelectorAll('#rollSizePills'+id+' .pill').forEach(p=>p.classList.remove('on'));
@@ -4150,13 +4191,13 @@ function spRollW(id, val){
   const customGrp=$('rollSizeCustomGrp'+id);
   if(val==='custom'){
     if(customGrp) customGrp.style.display='';
+    const confValCustom=$('rwConfirmVal'+id);
+    if(confValCustom) confValCustom.textContent='(enter below)';
   } else {
     if(customGrp) customGrp.style.display='none';
     if($('rw'+id)) $('rw'+id).value=val;
-    // Update the confirmation label
-    const confVal=$('rwConfirmVal'+id);
-    if(confVal) confVal.textContent=val+'mm';
-    if($('rwVal'+id)) $('rwVal'+id).value=val;
+    const confValSet=$('rwConfirmVal'+id);
+    if(confValSet) confValSet.textContent=val+'mm';
     if($('rwVal'+id)) $('rwVal'+id).value=val;
     calcW(id);
   }
@@ -4486,7 +4527,7 @@ function calcW(id){
 
   const tw=tw0;
   const dr=gn('dr'+id);
-  // Auto-calculate allowance (updates hidden da field and display)
+  const loc=gv('loc'+id)||'Window';  // declared early — used in storeWin calls throughout
   calcAllowance(id);
   const da=gn('da'+id,0)||calcAllowance(id);
   const cut=dr+da;
@@ -4593,21 +4634,20 @@ function calcW(id){
     const fcEl=$('fc2'+id);
     if(fcEl){fcEl.style.borderColor='var(--qq)';fcEl.style.boxShadow='0 0 0 2px rgba(224,120,0,.3)';}
   } else {
-    const fcEl=$('fc2'+id);
-    if(fcEl){fcEl.style.borderColor='';fcEl.style.boxShadow='';}
+    const fcElOk=$('fc2'+id);
+    if(fcElOk){fcElOk.style.borderColor='';fcElOk.style.boxShadow='';}
   }
   if(tw>6200){
     als.push({t:'w',m:'Width exceeds Norfolk price grid maximum (6200mm). Check with workroom.'});
     const twEl=$('op'+id); if(twEl){twEl.style.borderColor='var(--qq)';twEl.style.boxShadow='0 0 0 2px rgba(224,120,0,.3)';}
   } else {
-    const twEl=$('op'+id); if(twEl){twEl.style.borderColor='';twEl.style.boxShadow='';}
+    const twElOk=$('op'+id); if(twElOk){twElOk.style.borderColor='';twElOk.style.boxShadow='';}
   }
   if(dr>4900){
     als.push({t:'w',m:'Drop exceeds Norfolk price grid maximum (4900mm). Check with workroom.'});
-    // Highlight the drop input field
     const drEl=$('dr'+id); if(drEl){drEl.style.borderColor='var(--qq)';drEl.style.boxShadow='0 0 0 2px rgba(224,120,0,.3)';}
   } else {
-    const drEl=$('dr'+id); if(drEl){drEl.style.borderColor='';drEl.style.boxShadow='';}
+    const drElOk=$('dr'+id); if(drElOk){drElOk.style.borderColor='';drElOk.style.boxShadow='';}
   }
 
   if($('cd'+id))   $('cd'+id).textContent=cut+'mm'+(isPat&&rep>0?' → '+adjCut+'mm (pat.)':'');
@@ -4620,7 +4660,7 @@ function calcW(id){
   // Update total display based on itemise toggle (adds install if not itemised)
   setTimeout(()=>updateWindowTotalDisplay(id), 10);
   if($('alts'+id)) $('alts'+id).innerHTML=als.map(a=>`<div class="al al-${a.t==='e'?'e':'w'}"><span class="ai">${a.t==='e'?'⛔':'⚠️'}</span>${a.m}</div>`).join('');
-  const loc=gv('loc'+id)||'Window';
+  // loc already declared at top of calcW
   if($('bdT'+id)) $('bdT'+id).textContent=loc;
   // Gather display labels for track, bracket, draw, opening
   const tkDisp = (TRACKS.find(t=>t.v===tkv)||{}).lb||'—';
@@ -4891,6 +4931,19 @@ function onSPPTape(el, id){
 // ROLL WIDTH CONFIRMATION
 // ══════════════════════════════════════════
 
+// Called when operator types a custom roll width
+function onRWCustomInput(id){
+  const val = gn('rw'+id, 0);
+  if($('rwVal'+id)) $('rwVal'+id).value = val || 1500;
+  // Update the confirmation label
+  const confVal = $('rwConfirmVal'+id);
+  if(confVal) confVal.textContent = val > 0 ? val+'mm' : '(enter above)';
+  // Reset confirmation — width has changed
+  const chk = $('rwConfirm'+id);
+  if(chk && chk.checked){ chk.checked = false; onRWConfirm(id); }
+  calcW(id);
+}
+
 // Called when roll width confirmation checkbox ticked/unticked
 function onRWConfirm(id){
   const chk = $('rwConfirm'+id);
@@ -5000,8 +5053,8 @@ function calcWaveW(id){
     if(wdrEl){ wdrEl.style.borderColor='var(--qq)'; wdrEl.style.boxShadow='0 0 0 3px rgba(224,120,0,.3)'; }
   } else {
     if(wcdEl){ wcdEl.style.color=''; wcdEl.title=''; }
-    const wdrEl=$('wdr'+id);
-    if(wdrEl){ wdrEl.style.borderColor=''; wdrEl.style.boxShadow=''; }
+    const wdrElOk=$('wdr'+id);
+    if(wdrElOk){ wdrElOk.style.borderColor=''; wdrElOk.style.boxShadow=''; }
   }
 
   // Track pricing — reuse existing track price logic
@@ -5573,13 +5626,15 @@ function buildJobSheet(){
 // ══════════════════════════════════════════
 // COPY MENU
 // ══════════════════════════════════════════
-function togCopyMenu(id){
-  // Close all other open menus first
+function togCopyMenu(id, which){
+  event.stopPropagation();
+  // Close all other copy menus
   document.querySelectorAll('[id^="copyMenu"]').forEach(m=>{
-    if(m.id!=='copyMenu'+id) m.style.display='none';
+    if(m.id!==('copyMenu'+(which==='bottom'?'2':''))+id) m.style.display='none';
   });
-  const m=$('copyMenu'+id);
-  if(m) m.style.display=m.style.display==='none'?'':'none';
+  const menuId = which==='bottom' ? 'copyMenu2'+id : 'copyMenu'+id;
+  const m=$(menuId);
+  if(m) m.style.display = (m.style.display==='none'||m.style.display==='') ? 'block' : 'none';
 }
 // Close menus when clicking elsewhere
 document.addEventListener('click',()=>{
@@ -5611,7 +5666,7 @@ function snapshotWin(id){
     freight: gv('fr'+id),
     patPill: (document.querySelector('#pat'+id+' .pill.on')||{}).dataset?.val || 'plain',
     rep:     gv('rep'+id),
-    wbasePill:(document.querySelector('#wb'+id+' .pill.on')||{}).dataset?.val || 'no',
+    wbasePill:(document.querySelector('#wb'+id+' .pill.on')||{}).dataset?.val || 'yes',
     wsup:    gv('wsup'+id),
     wrng:    gv('wrng'+id),
     wcol:    gv('wcol'+id),
@@ -5674,6 +5729,14 @@ function applySnapshot(snap, targetId){
   if($('rng'+id))  $('rng'+id).value=snap.rng||'';
   if($('col'+id))  $('col'+id).value=snap.col||'';
   if($('rw'+id))   $('rw'+id).value=snap.rollW||'1370';
+  if($('rwVal'+id)) $('rwVal'+id).value=snap.rollW||'3000';
+  // Restore roll width confirmation label and state
+  const confValEl=$('rwConfirmVal'+id);
+  if(confValEl && snap.rollW) confValEl.textContent=snap.rollW+'mm';
+  if($('rwConfirm'+id)){
+    $('rwConfirm'+id).checked = !!snap.rwConfirm;
+    onRWConfirm(id);
+  }
   if($('fc2'+id))  $('fc2'+id).value=snap.fabcost||'';
   if($('so'+id))   $('so'+id).value=snap.smallord||'0';
   if($('fr'+id))   $('fr'+id).value=snap.freight||'0';
@@ -5701,11 +5764,11 @@ function applySnapshot(snap, targetId){
   }
 
   // SPP options
-  if(snap.sppType){ document.querySelectorAll('#sppType'+id+' .pill').forEach(p=>p.classList.remove('on')); const t=document.querySelector('#sppType'+id+' [data-val="'+snap.sppType+'"]'); if(t){ t.classList.add('on'); onSPPType(t,id); } }
-  if(snap.pleatCount){ document.querySelectorAll('#pleatCount'+id+' .pill').forEach(p=>p.classList.remove('on')); const t=document.querySelector('#pleatCount'+id+' [data-val="'+snap.pleatCount+'"]'); if(t) t.classList.add('on'); }
-  if(snap.sppTape){ document.querySelectorAll('#sppTape'+id+' .pill').forEach(p=>p.classList.remove('on')); const t=document.querySelector('#sppTape'+id+' [data-val="'+snap.sppTape+'"]'); if(t) t.classList.add('on'); }
-  if(snap.sppHook){ document.querySelectorAll('#sppHook'+id+' .pill').forEach(p=>p.classList.remove('on')); const t=document.querySelector('#sppHook'+id+' [data-val="'+snap.sppHook+'"]'); if(t) t.classList.add('on'); }
-  if(snap.sppSpacing){ document.querySelectorAll('#sppSpacing'+id+' .pill').forEach(p=>p.classList.remove('on')); const t=document.querySelector('#sppSpacing'+id+' [data-val="'+snap.sppSpacing+'"]'); if(t) t.classList.add('on'); }
+  if(snap.sppType){ document.querySelectorAll('#sppType'+id+' .pill').forEach(p=>p.classList.remove('on')); const tSppType=document.querySelector('#sppType'+id+' [data-val="'+snap.sppType+'"]'); if(tSppType){ tSppType.classList.add('on'); onSPPType(tSppType,id); } }
+  if(snap.pleatCount){ document.querySelectorAll('#pleatCount'+id+' .pill').forEach(p=>p.classList.remove('on')); const tPleat=document.querySelector('#pleatCount'+id+' [data-val="'+snap.pleatCount+'"]'); if(tPleat) tPleat.classList.add('on'); }
+  if(snap.sppTape){ document.querySelectorAll('#sppTape'+id+' .pill').forEach(p=>p.classList.remove('on')); const tTape=document.querySelector('#sppTape'+id+' [data-val="'+snap.sppTape+'"]'); if(tTape) tTape.classList.add('on'); }
+  if(snap.sppHook){ document.querySelectorAll('#sppHook'+id+' .pill').forEach(p=>p.classList.remove('on')); const tHook=document.querySelector('#sppHook'+id+' [data-val="'+snap.sppHook+'"]'); if(tHook) tHook.classList.add('on'); }
+  if(snap.sppSpacing){ document.querySelectorAll('#sppSpacing'+id+' .pill').forEach(p=>p.classList.remove('on')); const tSpacing=document.querySelector('#sppSpacing'+id+' [data-val="'+snap.sppSpacing+'"]'); if(tSpacing) tSpacing.classList.add('on'); }
   // Track type & colour (NOT bracket — that depends on bracket choice per window)
   if(snap.tt && $('tt'+id)){
     $('tt'+id).value=snap.tt;
@@ -5727,7 +5790,7 @@ function applySnapshot(snap, targetId){
 
   // Recalculate
   const ct=gv('ct'+id);
-  if(ct==='wave') calcWaveW(id); else if(ct==='pp') calcW(id);
+  if(ct==='wave') calcWaveW(id); else calcW(id);
 
   // Flash the card green briefly to confirm
   const card=$('c'+id);
@@ -5817,66 +5880,157 @@ function dupWin(fromId, mode){
   const btmBtn=$('addWinBottom'); if(btmBtn) btmBtn.style.display='';
   buildCard(newId,wc);
 
+  // Block onCT's auto-defaults from firing during copy
+  window._copyInProgress = true;
+  setTimeout(()=>{ window._copyInProgress = false; }, 200);
+
+  // Set curtain type — do NOT call onCT here as it triggers auto-defaults that overwrite our data
+  const ctEl=$('ct'+newId);
+  if(ctEl) ctEl.value=snap.ct||'';
+
+  // Set all fields directly without triggering cascading handlers
+  // Fabric
+  if($('fcat'+newId))  $('fcat'+newId).value=snap.fcat||'blockout_coated';
+  if($('ftype'+newId)) $('ftype'+newId).value=snap.ftype||'continuous';
+  if($('sup'+newId))   $('sup'+newId).value=snap.sup||'';
+  if($('rng'+newId))   $('rng'+newId).value=snap.rng||'';
+  if($('col'+newId))   $('col'+newId).value=snap.col||'';
+  if($('fc2'+newId))   $('fc2'+newId).value=snap.fabcost||'';
+  if($('so'+newId))    $('so'+newId).value=snap.smallord||'0';
+  if($('fr'+newId))    $('fr'+newId).value=snap.freight||'0';
+  if($('rw'+newId))    $('rw'+newId).value=snap.rollW||'3000';
+  if($('rwVal'+newId)) $('rwVal'+newId).value=snap.rollW||'3000';
+  const confLbl=$('rwConfirmVal'+newId);
+  if(confLbl&&snap.rollW) confLbl.textContent=snap.rollW+'mm';
+  // Track
+  if($('tt'+newId))     $('tt'+newId).value=snap.tt||'';
+  if($('tcolour'+newId)) $('tcolour'+newId).value=snap.tcolour||'';
+  // Draw type
+  if($('tdraw'+newId)){
+    $('tdraw'+newId).value=snap.tdraw||'hand';
+    document.querySelectorAll('#drawPills'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+    const dpill=document.querySelector('#drawPills'+newId+' [data-val="'+(snap.tdraw||'hand')+'"]');
+    if(dpill) dpill.classList.add('on');
+  }
+  // Lining & bumpf
+  if($('linToggle'+newId)) $('linToggle'+newId).checked=snap.linOn||false;
+  if($('linType'+newId))   $('linType'+newId).value=snap.linType||'attached';
+  if($('linCost'+newId))   $('linCost'+newId).value=snap.linCost||'';
+  if($('bumpfToggle'+newId)) $('bumpfToggle'+newId).checked=snap.bumpfOn||false;
+  if($('bumpfCost'+newId))   $('bumpfCost'+newId).value=snap.bumpfCost||'';
+  // Wave fold fabric
+  if($('wsup'+newId))  $('wsup'+newId).value=snap.wsup||'';
+  if($('wrng'+newId))  $('wrng'+newId).value=snap.wrng||'';
+  if($('wcol'+newId))  $('wcol'+newId).value=snap.wcol||'';
+  if($('wfc'+newId))   $('wfc'+newId).value=snap.wfc||'';
+  if($('wso'+newId))   $('wso'+newId).value=snap.wso||'0';
+  if($('wfrt'+newId))  $('wfrt'+newId).value=snap.wfrt||'0';
+  if($('wfcat'+newId)) $('wfcat'+newId).value=snap.wfcat||'sheer';
+
+  // Fullness pill
+  document.querySelectorAll('#full'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+  const fpill=document.querySelector('#full'+newId+' [data-val="'+snap.fullPill+'"]');
+  if(fpill) fpill.classList.add('on');
+  if(snap.fullPill==='custom'&&$('fc'+newId)) $('fc'+newId).value=snap.fullCust||'2.25';
+
+  // Pattern pill
+  document.querySelectorAll('#pat'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+  const ppill=document.querySelector('#pat'+newId+' [data-val="'+(snap.patPill||'plain')+'"]');
+  if(ppill) ppill.classList.add('on');
+  if($('rep'+newId)) $('rep'+newId).value=snap.rep||'';
+
+  // Weighted base pill
+  document.querySelectorAll('#wb'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+  const wbpill=document.querySelector('#wb'+newId+' [data-val="'+(snap.wbasePill||'yes')+'"]');
+  if(wbpill) wbpill.classList.add('on');
+
+  // Opening type pill
+  if(snap.openingVal){
+    document.querySelectorAll('#otype'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+    const opill=document.querySelector('#otype'+newId+' [data-val="'+snap.openingVal+'"]');
+    if(opill) opill.classList.add('on');
+  }
+
+  // SPP pills
+  if(snap.sppType){
+    document.querySelectorAll('#sppType'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+    const spType=document.querySelector('#sppType'+newId+' [data-val="'+snap.sppType+'"]');
+    if(spType) spType.classList.add('on');
+  }
+  if(snap.pleatCount){
+    document.querySelectorAll('#pleatCount'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+    const spPleat=document.querySelector('#pleatCount'+newId+' [data-val="'+snap.pleatCount+'"]');
+    if(spPleat) spPleat.classList.add('on');
+  }
+  if(snap.sppTape){
+    document.querySelectorAll('#sppTape'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+    const spTape=document.querySelector('#sppTape'+newId+' [data-val="'+snap.sppTape+'"]');
+    if(spTape) spTape.classList.add('on');
+  }
+  if(snap.sppHook){
+    document.querySelectorAll('#sppHook'+newId+' .pill').forEach(p=>p.classList.remove('on'));
+    const spHook=document.querySelector('#sppHook'+newId+' [data-val="'+snap.sppHook+'"]');
+    if(spHook) spHook.classList.add('on');
+  }
+
+  // Install
+  if($('install'+newId)) $('install'+newId).value=snap.install||'timber';
+  if($('wda'+newId)) $('wda'+newId).value=snap.wda||'200';
+
+  // Full copy — measurements
+  if(mode==='full'){
+    if($('loc'+newId))   $('loc'+newId).value=snap.loc||'';
+    if($('tw'+newId))    $('tw'+newId).value=snap.tw||'';
+    if($('op'+newId))    $('op'+newId).value=snap.op||'';
+    if($('eL'+newId))    $('eL'+newId).value=snap.eL||'0';
+    if($('eR'+newId))    $('eR'+newId).value=snap.eR||'0';
+    if($('dr'+newId))    $('dr'+newId).value=snap.dr||'';
+    if($('wop'+newId))   $('wop'+newId).value=snap.wop||'';
+    if($('wdr'+newId))   $('wdr'+newId).value=snap.wdr||'';
+    if(snap.cordside&&$('cordside'+newId)) $('cordside'+newId).value=snap.cordside;
+  } else {
+    // Template — flag blank fields
+    const locElT=$('loc'+newId); if(locElT){ locElT.style.borderColor='var(--qq)'; locElT.placeholder='⚠ Enter room name'; }
+    const opElT=$('op'+newId);   if(opElT){ opElT.style.borderColor='var(--qq)';   opElT.placeholder='⚠ Width'; }
+    const drElT=$('dr'+newId);   if(drElT){ drElT.style.borderColor='var(--qq)';   drElT.placeholder='⚠ Drop'; }
+  }
+
+  // NOW trigger onCT to show the right sections (after all values are set)
+  if(snap.ct) onCT(newId);
+  // Rebuild bracket dropdown and set bracket
+  if(snap.tt){ onTT(newId); if(snap.bkt&&$('bkt'+newId)) $('bkt'+newId).value=snap.bkt; }
+  // Set draw behaviour
+  onTDraw(newId);
+  // Recalc
+  if(snap.ct==='wave') calcWaveW(newId); else calcW(newId);
+  calcInstall(newId);
+
+  showCopyToast(mode==='full'?'Full copy added as Window '+wc+' ✓':'Template copy added — fill in room name, width and drop ✓');
+
+  // Label the copy — runs LAST, after all cascading onCT/calcW/updMeta calls settle
+  const _fromId=fromId, _newId=newId, _mode=mode;
   setTimeout(()=>{
-    // Apply curtain type first so sections show
-    if($('ct'+newId)&&snap.ct){ $('ct'+newId).value=snap.ct; onCT(newId); }
+    const srcName = gv('loc'+_fromId) || ('Window '+(wins.findIndex(w=>w.id===_fromId)+1));
+    const label = (_mode==='full' ? 'FULL COPY' : 'TEMPLATE COPY')+' of: '+srcName;
 
-    // Apply draw type
-    if($('tdraw'+newId)){
-      $('tdraw'+newId).value=snap.tdraw||'hand';
-      document.querySelectorAll('#drawPills'+newId+' .pill').forEach(p=>p.classList.remove('on'));
-      const dp=document.querySelector('#drawPills'+newId+' [data-val="'+(snap.tdraw||'hand')+'"]');
-      if(dp) dp.classList.add('on');
-      onTDraw(newId);
+    // Header name
+    const wnEl=document.getElementById('wn'+_newId);
+    if(wnEl) wnEl.textContent=label;
+
+    // Banner inside card
+    const barEl=document.getElementById('copyBar'+_newId);
+    if(barEl){
+      barEl.style.display='block';
+      barEl.innerHTML=''
+        +'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">'
+        +'<span style="font-size:12px;color:#ffcc66;font-weight:700">⧉ '+(_mode==='full'?'Full':'Template')+' copy of <strong style="color:#fff">"'+srcName+'"</strong> — update room name and details below</span>'
+        +'<button onclick="clearCopyBadge(\''+_newId+'\')" style="flex-shrink:0;background:var(--lm);border:none;color:var(--chd);border-radius:4px;padding:4px 12px;font-size:11px;font-weight:700;cursor:pointer">✓ Mark as new window</button>'
+        +'</div>';
     }
+  }, 300);
 
-    // Apply snapshot (fabric, heading, fullness, lining etc.)
-    applySnapshot(snap, newId);
-
-    if(mode==='full'){
-      // Copy measurements
-      if($('loc'+newId)&&snap.loc)  $('loc'+newId).value=snap.loc;
-      if($('tw'+newId)&&snap.tw)    { $('tw'+newId).value=snap.tw; }
-      // Carry roll width confirmation if same fabric
-      if(snap.rwConfirm){
-        const chk=$('rwConfirm'+newId);
-        if(chk){ chk.checked=true; onRWConfirm(newId); }
-      }
-      if($('op'+newId)&&snap.op)    { $('op'+newId).value=snap.op; }
-      if($('eL'+newId))             $('eL'+newId).value=snap.eL||'0';
-      if($('eR'+newId))             $('eR'+newId).value=snap.eR||'0';
-      if($('dr'+newId)&&snap.dr)    $('dr'+newId).value=snap.dr;
-      if($('wop'+newId)&&snap.wop)  $('wop'+newId).value=snap.wop;
-      if($('wdr'+newId)&&snap.wdr)  $('wdr'+newId).value=snap.wdr;
-      // Copy bracket
-      if($('bkt'+newId)&&snap.bkt){ $('bkt'+newId).value=snap.bkt; onBkt(newId); }
-      // Copy opening type
-      if(snap.openingVal){
-        document.querySelectorAll('#otype'+newId+' .pill').forEach(p=>p.classList.remove('on'));
-        const op=document.querySelector('#otype'+newId+' [data-val="'+snap.openingVal+'"]');
-        if(op) op.classList.add('on');
-      }
-      // Copy cord side
-      if(snap.cordside&&$('cordside'+newId)) $('cordside'+newId).value=snap.cordside;
-      calcTW(newId);
-      showCopyToast('Full copy added as Window '+wc+' ✓');
-      // Scroll to new window
-      const newCard=$('c'+newId); if(newCard) newCard.scrollIntoView({behavior:'smooth',block:'start'});
-    } else {
-      // Template copy — highlight blank fields
-      const locEl=$('loc'+newId);
-      if(locEl){ locEl.style.borderColor='var(--qq)'; locEl.placeholder='⚠ Enter room name'; locEl.focus(); }
-      const opEl=$('op'+newId);
-      if(opEl){ opEl.style.borderColor='var(--qq)'; opEl.placeholder='⚠ Width'; }
-      const drEl=$('dr'+newId);
-      if(drEl){ drEl.style.borderColor='var(--qq)'; drEl.placeholder='⚠ Drop'; }
-      showCopyToast('Template copy added — enter room name, sizes and track options ✓');
-      const newCard=$('c'+newId); if(newCard) newCard.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-    if($('wda'+newId)) $('wda'+newId).value=snap.wda||'200';
-    if($('install'+newId)) { $('install'+newId).value=snap.install||'timber'; calcInstall(newId); }
-    recalc();
-  }, 80);
+  setTimeout(()=>{ const el=$('c'+newId); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50);
+  recalc();
 }
 
 // ── Toast notification ──
@@ -6878,6 +7032,25 @@ function clearFlibConfirm() {
   if(!confirm('Clear the entire fabric library ('+lib.length+' fabric'+(lib.length===1?'':'s')+')?\n\nThis cannot be undone.')) return;
   flibSave([]);
   renderFlibTable();
+}
+
+// ══════════════════════════════════════════
+// PILL KEYBOARD SUPPORT
+// Allows Tab to reach pills and Enter/Space to activate them
+// ══════════════════════════════════════════
+document.addEventListener('keydown', function(e){
+  if((e.key==='Enter'||e.key===' ') && document.activeElement && document.activeElement.classList.contains('pill')){
+    e.preventDefault();
+    document.activeElement.click();
+  }
+});
+
+// Make all pills focusable — called after any card is built
+function makePillsTabable(container){
+  if(!container) return;
+  container.querySelectorAll('.pill').forEach(p=>{
+    if(!p.getAttribute('tabindex')) p.setAttribute('tabindex','0');
+  });
 }
 
 // ══════════════════════════════════════════
