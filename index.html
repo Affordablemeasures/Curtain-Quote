@@ -426,6 +426,9 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
           <button class="bgd bsm" onclick="saveAndNew()" title="Save then start fresh quote">💾 New Quote</button>
     <button class="bg bsm" onclick="showHelp()" title="Help &amp; instructions">❓ Help</button>
     <button class="bl bsm" onclick="window.print()">🖨 Print/PDF</button>
+    <div id="autosaveIndicator" style="font-size:9px;color:#555;text-align:right;line-height:1.3;min-width:60px">
+      <div id="autosaveStatus">—</div>
+    </div>
   </div>
 </header>
 
@@ -4801,6 +4804,7 @@ function storeWin(id,d){
 }
 function updMeta(id){
   const loc=gv('loc'+id); if($('wn'+id)) $('wn'+id).textContent=loc||'New Window';
+  scheduleAutosave();
   const w=wins.find(x=>x.id===id); const el=$('wm'+id);
   if(el&&w){
     const pts=[];
@@ -4843,6 +4847,7 @@ function updateWindowTotalDisplay(id){
 function recalc(){
   if(mode==='quick'){recalcQQ();return;}
   if(activeQuote==='B'){recalcB();return;}
+  scheduleAutosave();
   const sur=1+(gn('gSur',0)/100);
   let fab=0,mk=0,bn=0,winTot=0,install=0;
   wins.forEach(w=>{
@@ -6759,64 +6764,303 @@ function saveAndNew(){
     const qqSum=$('qqSumPanel'); if(qqSum) qqSum.style.display='none';
     setMode('detail');
     buildJobSheet();
+    // Clear autosave — fresh start
+    localStorage.removeItem(AUTOSAVE_KEY);
+    const asSt=$('autosaveStatus'); if(asSt){ asSt.textContent='New session'; asSt.style.color='#666'; }
     window.scrollTo({top:0,behavior:'smooth'});
     recalc();
   },600);
 }
 
+// ══════════════════════════════════════════
+// AUTOSAVE SYSTEM
+// Saves full quote state to localStorage on every change.
+// On load, offers to restore last session if one exists.
+// Storage key: acb_autosave (single slot — current session)
+// ══════════════════════════════════════════
+
+const AUTOSAVE_KEY = 'acb_autosave';
+let _autosaveTimer = null;
+let _autosaveDirty = false;
+
+// ── Capture full state of all windows ──
+function captureWindowState(winList){
+  return winList.map(w=>{
+    const id=w.id;
+    const ct=gv('ct'+id);
+    const isWave=(ct==='wave');
+    // Capture every field by reading the DOM directly
+    const fields={};
+    // All input/select/textarea elements inside this window card
+    const card=document.getElementById('c'+id);
+    if(card){
+      card.querySelectorAll('input,select,textarea').forEach(el=>{
+        if(!el.id) return;
+        if(el.type==='checkbox') fields[el.id]=el.checked;
+        else fields[el.id]=el.value;
+      });
+    }
+    // Capture pill states (data-val of .on pill in each pill group)
+    const pills={};
+    if(card){
+      card.querySelectorAll('.pg[id]').forEach(pg=>{
+        const on=pg.querySelector('.pill.on');
+        if(on) pills[pg.id]=on.dataset.val;
+      });
+    }
+    return {id, num:w.num, fields, pills};
+  });
+}
+
+// ── Full state snapshot ──
+function captureFullState(){
+  return {
+    version: 3,
+    savedAt: new Date().toISOString(),
+    mode,
+    staff: currentStaff||null,
+    wc,
+    customer:{
+      first:gv('cFirst'),last:gv('cLast'),
+      address:gv('cAddr'),suburb:gv('cSuburb'),
+      phone:gv('cPhone'),email:gv('cEmail'),
+      measureDate:gv('mDate'),quoteDate:gv('qDate'),quoteNum:gv('qNum')
+    },
+    globalSurcharge: gv('gSur'),
+    notes: gv('qNotes'),
+    wins: captureWindowState(wins),
+    bWins: captureWindowState(bWins),
+  };
+}
+
+// ── Restore a window from saved state ──
+function restoreWindowState(saved, winList, buildFn){
+  saved.forEach(ws=>{
+    // Build the card
+    winList.push({id:ws.id, num:ws.num});
+    buildFn(ws.id, ws.num);
+    // Restore all input/select values
+    if(ws.fields){
+      Object.entries(ws.fields).forEach(([elId, val])=>{
+        const el=document.getElementById(elId);
+        if(!el) return;
+        if(el.type==='checkbox') el.checked=!!val;
+        else el.value=val;
+      });
+    }
+    // Restore pill states
+    if(ws.pills){
+      Object.entries(ws.pills).forEach(([pgId, val])=>{
+        const pg=document.getElementById(pgId);
+        if(!pg||!val) return;
+        pg.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+        const target=pg.querySelector('[data-val="'+val+'"]');
+        if(target) target.classList.add('on');
+      });
+    }
+    // Trigger onCT to show correct sections
+    const ct=gv('ct'+ws.id);
+    if(ct){ document.getElementById('ct'+ws.id).value=ct; onCT(ws.id); }
+    // Rebuild track dropdown and set bracket
+    const tt=gv('tt'+ws.id);
+    if(tt){ onTT(ws.id); }
+    // Recalc
+    if(ct==='wave') calcWaveW(ws.id); else if(ct) calcW(ws.id);
+    calcInstall(ws.id);
+  });
+}
+
+// ── Restore full state ──
+function restoreFullState(d){
+  if(!d) return;
+  // Customer
+  if(d.customer){
+    $('cFirst').value=d.customer.first||'';
+    $('cLast').value=d.customer.last||'';
+    $('cAddr').value=d.customer.address||'';
+    $('cSuburb').value=d.customer.suburb||'';
+    $('cPhone').value=d.customer.phone||'';
+    $('cEmail').value=d.customer.email||'';
+    $('mDate').value=d.customer.measureDate||'';
+    $('qDate').value=d.customer.quoteDate||'';
+    $('qNum').value=d.customer.quoteNum||'';
+  }
+  if(d.notes && $('qNotes')) $('qNotes').value=d.notes;
+  if(d.globalSurcharge && $('gSur')) $('gSur').value=d.globalSurcharge;
+  if(d.staff){ currentStaff=d.staff; const b=$('staffBadge'); if(b) b.textContent=d.staff.initials; }
+  if(d.mode) setMode(d.mode);
+  if(d.wc) wc=d.wc;
+  updHdr();
+  // Restore Quote A windows
+  if(d.wins&&d.wins.length){
+    $('noWin').style.display='none';
+    $('sumPanel').style.display='';
+    const btmBtn=$('addWinBottom'); if(btmBtn) btmBtn.style.display='';
+    restoreWindowState(d.wins, wins, buildCard);
+  }
+  // Restore Quote B windows
+  if(d.bWins&&d.bWins.length){
+    restoreWindowState(d.bWins, bWins, buildBCard);
+  }
+  setTimeout(()=>{ recalc(); updHdr(); }, 100);
+}
+
+// ── Autosave to localStorage ──
+function autosave(){
+  try{
+    const state = captureFullState();
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(state));
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+    const el=$('autosaveStatus');
+    if(el){ el.textContent='✓ Saved '+timeStr; el.style.color='#4a8'; }
+    _autosaveDirty = false;
+  } catch(e){
+    const el=$('autosaveStatus');
+    if(el){ el.textContent='⚠ Save failed'; el.style.color='#e44'; }
+  }
+}
+
+// ── Schedule autosave (debounced — fires 3s after last change) ──
+function scheduleAutosave(){
+  _autosaveDirty = true;
+  clearTimeout(_autosaveTimer);
+  _autosaveTimer = setTimeout(autosave, 3000);
+  // Show pending indicator
+  const el=$('autosaveStatus');
+  if(el && el.textContent !== '⚠ Save failed'){ el.textContent='saving...'; el.style.color='#888'; }
+}
+
+// ── Check for saved session on load ──
+function checkAutosaveRecovery(){
+  try{
+    const raw = localStorage.getItem(AUTOSAVE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(!d || !d.savedAt) return;
+    // Only offer recovery if there's actually something to recover
+    const hasContent = (d.wins&&d.wins.length) || (d.customer&&(d.customer.first||d.customer.last));
+    if(!hasContent) return;
+
+    const savedAt = new Date(d.savedAt);
+    const timeStr = savedAt.toLocaleString('en-AU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    const custName = [d.customer?.first,d.customer?.last].filter(Boolean).join(' ')||'unnamed customer';
+    const winCount = (d.wins?.length||0) + (d.bWins?.length||0);
+
+    // Show recovery modal
+    showRecoveryModal(timeStr, custName, winCount, d);
+  } catch(e){ /* ignore corrupt data */ }
+}
+
+function showRecoveryModal(timeStr, custName, winCount, savedData){
+  const modal = document.createElement('div');
+  modal.id = 'recoveryModal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center';
+  modal.innerHTML = `
+    <div style="background:var(--chd);border:2px solid var(--lm);border-radius:12px;padding:28px 32px;max-width:440px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.6)">
+      <div style="font-size:18px;font-weight:700;color:var(--lm);margin-bottom:6px">🔄 Unsaved session found</div>
+      <div style="font-size:13px;color:#ccc;margin-bottom:18px">The tool found an autosaved session from a previous visit:</div>
+      <div style="background:var(--chm);border-radius:8px;padding:14px 16px;margin-bottom:20px">
+        <div style="font-size:12px;color:#aaa;margin-bottom:4px">Last saved</div>
+        <div style="font-size:15px;font-weight:700;color:#fff">${timeStr}</div>
+        <div style="font-size:12px;color:#aaa;margin-top:8px;margin-bottom:2px">Customer</div>
+        <div style="font-size:14px;color:var(--lml)">${custName}</div>
+        ${winCount ? `<div style="font-size:12px;color:#aaa;margin-top:8px;margin-bottom:2px">Windows</div><div style="font-size:14px;color:var(--lml)">${winCount} window${winCount===1?'':'s'}</div>` : ''}
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="doRecoverSession()" style="flex:1;background:var(--lm);color:var(--chd);border:none;padding:10px 16px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer">↩ Restore this session</button>
+        <button onclick="doDiscardSession()" style="flex:1;background:var(--chm);color:#aaa;border:1px solid #555;padding:10px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">✕ Start fresh</button>
+      </div>
+      <div style="font-size:10px;color:#555;margin-top:12px;text-align:center">The saved session is kept until you start a new quote or clear it manually.</div>
+    </div>`;
+  document.body.appendChild(modal);
+  // Store data for recovery
+  window._pendingRecovery = savedData;
+}
+
+function doRecoverSession(){
+  const modal=$('recoveryModal'); if(modal) modal.remove();
+  const d = window._pendingRecovery;
+  if(!d) return;
+  // Close staff modal first
+  const staffModal=$('staffModal'); if(staffModal) staffModal.style.display='none';
+  restoreFullState(d);
+  const el=$('autosaveStatus');
+  if(el){ el.textContent='✓ Restored'; el.style.color='#4a8'; }
+  showCopyToast('Session restored ✓');
+}
+
+function doDiscardSession(){
+  const modal=$('recoveryModal'); if(modal) modal.remove();
+  localStorage.removeItem(AUTOSAVE_KEY);
+  window._pendingRecovery = null;
+  const el=$('autosaveStatus');
+  if(el){ el.textContent='New session'; el.style.color='#666'; }
+}
+
+// ── Manual Save (file download) — now saves full state ──
 function saveQuote(){
-  const data={version:2,savedAt:new Date().toISOString(),mode,
-    staff:currentStaff||null,
-    customer:{first:gv('cFirst'),last:gv('cLast'),address:gv('cAddr'),suburb:gv('cSuburb'),phone:gv('cPhone'),email:gv('cEmail'),measureDate:gv('mDate'),quoteDate:gv('qDate'),quoteNum:gv('qNum')},
-    globalSurcharge:gv('gSur'),notes:gv('qNotes')};
-  const nm=[gv('cFirst'),gv('cLast')].filter(Boolean).join('_')||'customer';
+  const data = captureFullState();
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
-  // Filename: QuoteNumber_LastName_FirstName.json  e.g. CU-22-03-2026-01_Smith_John.json
   const qn = gv('qNum')||'quote';
   const fn = gv('cFirst')||''; const ln = gv('cLast')||'';
   const namePart = [ln,fn].filter(Boolean).join('_')||'customer';
   a.download = qn+'_'+namePart+'.json';
   a.click();
-  // Show instructions for saving to Google Drive
   setTimeout(()=>{
-    alert('Quote saved: '+a.download+'\n\nTo save to Google Drive:\n1. A file download started automatically\n2. Open Google Drive in your browser\n3. Drag the downloaded file into your Curtain Quotes folder\n\nTip: Files named by quote number sort newest-first automatically.');
+    alert('Quote saved: '+a.download+'\n\nTo save to Google Drive:\n1. The file downloaded automatically\n2. Open Google Drive and drag it into your Curtain Quotes folder\n\nThe autosave also keeps your work safe in this browser.');
   }, 300);
 }
+
+// ── Manual Load (file) — now restores full state ──
 function loadQuote(){
-  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='.json';
   inp.onchange=e=>{
-    const f=e.target.files[0];if(!f)return;
+    const f=e.target.files[0]; if(!f) return;
     const r=new FileReader();
     r.onload=ev=>{
       try{
         const d=JSON.parse(ev.target.result);
-        if(d.staff){ currentStaff=d.staff; const badge=$('staffBadge'); if(badge) badge.textContent=d.staff.initials; }
-        if(d.customer){$('cFirst').value=d.customer.first||'';$('cLast').value=d.customer.last||'';$('cAddr').value=d.customer.address||'';$('cSuburb').value=d.customer.suburb||'';$('cPhone').value=d.customer.phone||'';$('cEmail').value=d.customer.email||'';$('mDate').value=d.customer.measureDate||'';$('qDate').value=d.customer.quoteDate||'';$('qNum').value=d.customer.quoteNum||'';}
-        if(d.notes)$('qNotes').value=d.notes;
-        if(d.globalSurcharge)$('gSur').value=d.globalSurcharge;
-        if(d.mode)setMode(d.mode);
-        updHdr();
-        alert('Customer details loaded. Full window save/load coming in a later stage.');
-      }catch(err){alert('Could not read file — check it is a valid quote JSON.');}
+        if(!d.version) throw new Error('Not a valid quote file');
+        // Clear current windows
+        wins.forEach(w=>{ const el=$('c'+w.id); if(el) el.remove(); });
+        wins.length=0; wc=0;
+        bWins.forEach(w=>{ const el=$('c'+w.id); if(el) el.remove(); });
+        bWins.length=0; bWinCount=0;
+        restoreFullState(d);
+        showCopyToast('Quote loaded ✓');
+      }catch(err){ alert('Could not read file — check it is a valid quote JSON.\n\n'+err.message); }
     };
     r.readAsText(f);
   };
   inp.click();
 }
 
+
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   $('qDate').value=new Date().toISOString().split('T')[0];
-  // Build staff buttons then show modal — ensures buttons are visible before modal appears
+  // Build staff buttons then show modal
   buildStaffButtons();
-  $('staffModal').style.display='flex';
+  // Check for autosaved session BEFORE showing staff modal
+  const hasSaved = !!localStorage.getItem(AUTOSAVE_KEY);
+  if(hasSaved){
+    // Delay slightly so DOM is fully ready
+    setTimeout(checkAutosaveRecovery, 200);
+  } else {
+    $('staffModal').style.display='flex';
+  }
   updAssume();
   flibUpdateCount();
-  // Discount is never applied — Norfolk grid prices used as-is
   window._earlyPayDiscount = false;
+  // Autosave heartbeat — saves every 60s regardless, as a backup
+  setInterval(()=>{ if(_autosaveDirty) autosave(); }, 60000);
+  // Show initial status
+  const el=$('autosaveStatus');
+  if(el){ el.textContent='autosave on'; el.style.color='#555'; }
 });
 // ══════════════════════════════════════════
 // FABRIC LIBRARY
