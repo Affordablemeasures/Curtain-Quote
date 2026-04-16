@@ -2001,8 +2001,7 @@ function calcQQInstallCost(id, tw, dr) {
   // 3-tier hang rate: ≤2700 = $25, 2701-4000 = $50, >4000 = $50 (scaffold POA — QQ uses $50 base)
   const isForceHigh = (installTypeKey === 'high');
   const isMidOrHigh = (dr > 2700) || isForceHigh;
-  const isWideTW    = (tw > 4000);
-  const hangRate    = (isMidOrHigh || isWideTW) ? rates.hangMid : rates.hangStd;
+  const hangRate    = isMidOrHigh ? rates.hangMid : rates.hangStd;
   const isScaffold  = (dr > 4000) && !isForceHigh;
 
   const trackFix  = rates.trackFix;
@@ -4525,6 +4524,7 @@ function calcW(id){
   if(!isPPType){
     const nonFabTotal=r5(trackRetail+bendRetail+fsRetail);
     storeWin(id,{bendCost:bendRetail,trackRetail,fsRetail,total:nonFabTotal});
+    calcInstall(id);
     updMeta(id); return;
   }
 
@@ -4563,6 +4563,7 @@ function calcW(id){
     if($('wt'+id))   $('wt'+id).textContent='—';
     if($('cd'+id))   $('cd'+id).textContent=cut>0?cut+'mm':'—';
     storeWin(id,{wTot:0,fabTot:0,mkR5:0,bendCost:bendRetail,trackRetail,fsRetail,totM:0,loc,tw,dr,type:type});
+    calcInstall(id); // still need to calc install even when fabric calc is gated
     recalc(); return;
   }
   const fc=gn('fc2'+id,0); const so=gn('so'+id,0); const frt=gn('fr'+id,0);
@@ -5380,9 +5381,8 @@ function calcInstall(id){
   if(scaffoldGrp) scaffoldGrp.style.display = isScaffold ? '' : 'none';
   const scaffoldSurcharge = isScaffold ? gn('scaffoldSurcharge'+id, 0) : 0;
 
-  // Wide track: width > 4000mm also triggers $50 rate
-  const isWideTW  = (tw > 4000);
-  if(isWideTW && hangRate < rates.hangMid) hangRate = rates.hangMid;
+  // isWideTW removed — hang rate is based on DROP HEIGHT only, not track width
+  const isWideTW = false;
 
   // Bay/corner window — bent track requires $80 track fix regardless of substrate
   const isBayBend = (gv('btype'+id)==='bay_2bend'||gv('btype'+id)==='bay_square'||gv('btype'+id)==='corner_single');
@@ -5396,7 +5396,7 @@ function calcInstall(id){
   // Existing curtains re-hang surcharge
   const existCurtain = $('existCurtain'+id)&&$('existCurtain'+id).checked;
   const rehangBase   = 60;
-  const rehangCost   = existCurtain ? (((isForceHigh||isMid||isScaffold)||isWideTW) ? rehangBase*2 : rehangBase) : 0;
+  const rehangCost   = existCurtain ? ((isForceHigh||isMid||isScaffold) ? rehangBase*2 : rehangBase) : 0;
 
   const calcedInstallCost = r5(trackFixCost + hangCost + clearCost + rehangCost + scaffoldSurcharge);
 
